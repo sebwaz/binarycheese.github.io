@@ -48,9 +48,3 @@ transform: translateX(-50%);
   border: 1px dotted rgba(0,0,0,0);
     
 }
-
-container a:active {
-    
-  text-decoration: none;
-    
-}
