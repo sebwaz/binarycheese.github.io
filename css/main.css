@@ -1,7 +1,7 @@
 body {
     
-    background-color: rgb(255,255,255);
-    /*background-image: url('../images/death-valley-crop2.png');*/
+    background-color: rgb(250,235,0);
+    background-image: url('../images/brainYellow400.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: center
@@ -33,10 +33,10 @@ transform: translateX(-50%);
   width: 240px;
   height: 26px;
   
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(255,255,255,0);
   border: 1px dotted;
-  border-color: rgb(0,0,0);
-  color: rgba(0,0,0,1);
+  border-color: rgba(255,255,255,0);
+  color: rgba(255,255,255,1);
     
 }
 
@@ -44,7 +44,23 @@ transform: translateX(-50%);
     
   color: rgb(255,255,255);
   text-decoration: none;
-  background-color: rgba(255,255,0,1);
+  background-color: rgba(0,255,255,1);
   border: 1px dotted rgba(0,0,0,0);
+    
+}
+
+.subscript {
+    
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translateY(-50%);
+    transform: translateX(-50%);
+    
+    font-family: 'Press Start 2P';
+    font-weight: normal;
+    font-size: 8px; 
+    text-align: center;
+    color: rgb(255,255,255);
     
 }
