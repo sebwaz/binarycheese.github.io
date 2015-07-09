@@ -1,11 +1,11 @@
 body {
     
-    background-color: rgb(250,235,0);
-    background-image: url('../images/brainYellow400.png');
+    background-color: rgb(255,255,220);
+    background-image: url('../images/brainWhite400.png');
     background-size: cover;
     background-attachment: fixed;
-    background-position: center
-        
+    background-position: center;
+    background-repeat: no-repeat;  
 }
 
 .container {
@@ -33,10 +33,10 @@ transform: translateX(-50%);
   width: 240px;
   height: 26px;
   
-  background-color: rgba(255,255,255,0);
+  background-color: rgba(100,100,0,0.);
   border: 1px dotted;
   border-color: rgba(255,255,255,0);
-  color: rgba(255,255,255,1);
+  color: rgba(0,0,0,1);
     
 }
 
@@ -61,6 +61,6 @@ transform: translateX(-50%);
     font-weight: normal;
     font-size: 8px; 
     text-align: center;
-    color: rgb(255,255,255);
+    color: rgb(0,0,0);
     
 }
