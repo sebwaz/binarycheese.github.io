@@ -2,10 +2,10 @@ body {
     
     background-color: rgb(255,255,220);
     background-image: url('../images/brainWhite400.png');
-    background-size: cover;
+    background-size: 630px;
     background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;  
+    background-position: 50% 40%;
+    background-repeat: no-repeat;
 }
 
 .container {
