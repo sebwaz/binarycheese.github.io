@@ -4,8 +4,8 @@ input, select {
 
 body {
     
-    background-color: rgb(255,255,220);
-    background-image: url('../images/brainWhite400.png');
+    background-color: rgb(245,245,245);
+    background-image: url('../images/brainWhite400-2.png');
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: 630px;
@@ -51,7 +51,7 @@ transform: translateX(-50%);
     
   color: rgb(255,255,255);
   text-decoration: none;
-  background-color: rgba(0,255,255,1);
+  background-color: rgba(255,0,255,1);
   border: 1px dotted rgba(0,0,0,0);
     
 }
