@@ -5,13 +5,16 @@ input, select {
 body {
     
     background-color: rgb(245,245,245);
-    background-image: url('../images/brainWhite400-2.png');
+    
+    /*
+    background-image: url('../images/brainWhite400.png');
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: 630px;
     background-attachment: fixed;
     background-position: 50% 40%;  
     background-repeat: no-repeat;
+    */
 
 }
 
