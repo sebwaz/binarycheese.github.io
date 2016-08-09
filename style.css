@@ -1,0 +1,32 @@
+body {padding: 0; margin: 0; background: #000000;}
+h2   { color: #ffffff; font-family: sans-serif;}
+a    { color: #ffffff; }
+        
+a:hover, a:active, a:focus { color: #0000ff; }
+        
+canvas
+{
+    padding:     0;
+    margin:      auto;
+    display:     block;
+    position:    absolute;
+    top:         0;
+    bottom:      0;
+    left:        0;
+    right:       0;
+    z-index:     -1;
+}
+
+div
+{
+    width:       640px;
+    height:      480px;
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    top:         50%;
+    left:        50%;
+    margin-top:  -120px;
+    margin-left: -200px;
+    z-index:     0;
+}
