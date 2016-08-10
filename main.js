@@ -38,15 +38,15 @@ var is_click = false
 function touchStarted()
 {
     // interpret as mouse click over links areas
-    if (touches[0]["y"] >= 195 &&
-        touches[0]["y"] <= 225 &&
-        touches[0]["x"] >= 250 &&
-        touches[0]["x"] <= 305 ||
+    if (touches[0]["y"] >= 175 &&
+        touches[0]["y"] <= 245 &&
+        touches[0]["x"] >= 230 &&
+        touches[0]["x"] <= 325 ||
         
-        touches[0]["y"] >= 165 &&
-        touches[0]["y"] <= 195 &&
-        touches[0]["x"] >= 120 &&
-        touches[0]["x"] <= 175)
+        touches[0]["y"] >= 145 &&
+        touches[0]["y"] <= 215 &&
+        touches[0]["x"] >= 100 &&
+        touches[0]["x"] <= 195)
     {
         is_click = true
         mousePressed()
