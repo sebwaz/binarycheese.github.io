@@ -51,6 +51,7 @@ function touchStarted()
         is_click = true
         mousePressed()
     }
+    // guarantees no zoom/pan during multitouch
     else { return false }
 }
 
@@ -64,6 +65,7 @@ function touchEnded()
         mouseReleased()
         is_click = false
     }
+    // guarantees no zoom/pan during multitouch
     else { return false }
 }
 
