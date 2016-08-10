@@ -1,3 +1,4 @@
+// MADE BY SEBAS :) 
 var img
 
 // screen dims
@@ -30,15 +31,42 @@ function setup()
 
 
 // default touch functions
+var is_click = false
+
+// If no touchStarted() function is defined, the mousePressed()
+// function will be called instead if it is defined.
 function touchStarted()
 {
-  return false
+    // interpret as mouse click over links areas
+    if (touches[0]["y"] >= 195 &&
+        touches[0]["y"] <= 225 &&
+        touches[0]["x"] >= 250 &&
+        touches[0]["x"] <= 305 ||
+        
+        touches[0]["y"] >= 165 &&
+        touches[0]["y"] <= 195 &&
+        touches[0]["x"] >= 120 &&
+        touches[0]["x"] <= 175)
+    {
+        is_click = true
+        mousePressed()
+    }
+    else { return false }
 }
 
+// If no touchEnded() function is defined, the mouseReleased()
+// function will be called instead if it is defined.
 function touchEnded()
 {
-  return false
+    // interpret as mouse click over links
+    if (is_click)
+    {
+        mouseReleased()
+        is_click = false
+    }
+    else { return false }
 }
+
 
 
 
@@ -58,9 +86,16 @@ function draw()
 {
   /* place hand writing */
   image(img, 0, 0);
-    
+
   /* START OSC */
   
+  // check for mouse saw
+  if (mouseIsPressed && !lock_saw1)
+  {
+    lock_saw1 = true
+    saw1.start()
+  }    
+    
   // check for saw1
   if (touchIsDown && !lock_saw1)
   {
@@ -85,6 +120,13 @@ function draw()
   
   /* MODIFY PITCH */
   
+  // if still holding mouse, allow pitch manip
+  if (mouseIsPressed)
+  {
+    // range: [C1, C4]
+    saw1.freq(heightToHz(mouseY))
+  }  
+    
   // if still holding saw1, allow pitch manip
   if (touches[0] !== undefined)
   {
@@ -124,7 +166,7 @@ function draw()
   }
   
   // no touch, stop saw1
-  if (touches[0] === undefined)
+  if (touches[0] === undefined && !mouseIsPressed)
   {
     saw1.stop()
     lock_saw1 = false
