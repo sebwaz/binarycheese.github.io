@@ -1,13 +1,13 @@
 // MADE BY SEBAS :) 
-var img
+var img;
 
 // screen dims
-var w = 640
-var h = 480
+var w = 640;
+var h = 480;
 
 // theremin dims
-var numOctaves = 3
-var maxPitch   = 440
+var numOctaves = 3;
+var maxPitch   = 440;
 
 // on init
 function setup()

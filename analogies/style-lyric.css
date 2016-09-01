@@ -1,0 +1,23 @@
+.heat
+{
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    top:         80%;
+    left:        80%;
+    margin-top:  -180px;
+    margin-left: -400px;
+    z-index:     -1;
+}
+
+.windy
+{
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    top:         80%;
+    left:        80%;
+    margin-top:  -220px;
+    margin-left: -400px;
+    z-index:     -1;
+}
