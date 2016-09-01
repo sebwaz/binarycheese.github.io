@@ -1,12 +1,23 @@
+.text
+{
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    top:         10%;
+    left:        10%;
+    margin-top:  0px;
+    margin-left: 0px;
+}
+
 .heat
 {
     padding:     0;
     display:     block;
     position:    absolute;
-    top:         80%;
-    left:        80%;
-    margin-top:  -180px;
-    margin-left: -400px;
+    top:         10%;
+    left:        10%;
+    margin-top:  180px;
+    margin-left: 360px;
     z-index:     -1;
 }
 
@@ -15,9 +26,9 @@
     padding:     0;
     display:     block;
     position:    absolute;
-    top:         80%;
-    left:        80%;
-    margin-top:  -220px;
-    margin-left: -400px;
+    top:         10%;
+    left:        10%;
+    margin-top:  240px;
+    margin-left: 400px;
     z-index:     -1;
 }
