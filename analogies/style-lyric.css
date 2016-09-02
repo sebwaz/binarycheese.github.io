@@ -1,12 +1,32 @@
-.text
+.textheat
 {
     padding:     0;
     display:     block;
     position:    absolute;
     top:         10%;
     left:        10%;
-    margin-top:  0px;
-    margin-left: 0px;
+}
+
+.textwindy
+{
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    text-align:  center;
+    top:         10%;
+    left:        10%;
+    margin-left: 50px;
+}
+
+.textsink
+{
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    text-align:  right;
+    top:         10%;
+    left:        30%;
+    margin-top:  50px;
 }
 
 .heat
@@ -28,8 +48,8 @@
     position:    absolute;
     top:         10%;
     left:        10%;
-    margin-top:  465px;
-    margin-left: 150px;
+    margin-top:  100px;
+    margin-left: 350px;
     z-index:     -1;
 }
 
@@ -42,16 +62,5 @@
     left:        10%;
     margin-top:  120px;
     margin-left: -250px;
-    z-index:     -1;
-}
-
-.sunk
-{
-    padding:     0;
-    display:     block;
-    position:    absolute;
-    top:         70%;
-    left:        85%;
-    margin-left: -100px;
     z-index:     -1;
 }
