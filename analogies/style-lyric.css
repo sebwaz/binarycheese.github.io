@@ -48,6 +48,7 @@
     position:    absolute;
     top:         10%;
     left:        10%;
+    margin-top:  100px;
     margin-left: 330px;
     z-index:     -1;
 }
