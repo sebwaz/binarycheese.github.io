@@ -28,7 +28,19 @@
     position:    absolute;
     top:         10%;
     left:        10%;
-    margin-top:  220px;
-    margin-left: 420px;
+    margin-top:  135px;
+    margin-left: 280px;
+    z-index:     -1;
+}
+
+.sinking
+{
+    padding:     0;
+    display:     block;
+    position:    absolute;
+    top:         10%;
+    left:        10%;
+    margin-top:  80px;
+    margin-left: -250px;
     z-index:     -1;
 }
