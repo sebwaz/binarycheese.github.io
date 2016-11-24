@@ -19,7 +19,7 @@ d = 1.5*Math.PI
 function setup()
 {
   createCanvas(w, h)
-  background(128)
+  background(0)
   
   img = loadImage("img/hand2.png");
   
