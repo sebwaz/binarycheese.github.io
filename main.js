@@ -2,7 +2,7 @@
 var img;
 
 // screen dims
-var w = 700;
+var w = 850;
 var h = 480;
 
 // theremin dims
@@ -13,7 +13,7 @@ var maxPitch   = 440;
 function setup()
 {
   createCanvas(w, h)
-  background(0)
+  background(128)
   
   img = loadImage("img/hand.png");
   
@@ -40,18 +40,18 @@ function touchStarted()
     // interpret as mouse click over links areas
     if (touches[0]["y"] >= 80 &&
         touches[0]["y"] <= 160 &&
-        touches[0]["x"] >= 0 &&
-        touches[0]["x"] <= 140 ||
+        touches[0]["x"] >= 50 &&
+        touches[0]["x"] <= 215 ||
         
         touches[0]["y"] >= 150 &&
         touches[0]["y"] <= 230 &&
-        touches[0]["x"] >= 280 &&
-        touches[0]["x"] <= 420 ||
+        touches[0]["x"] >= 355 &&
+        touches[0]["x"] <= 495 ||
         
         touches[0]["y"] >= 270 &&
         touches[0]["y"] <= 350 &&
-        touches[0]["x"] >= 240 &&
-        touches[0]["x"] <= 490)
+        touches[0]["x"] >= 315 &&
+        touches[0]["x"] <= 565)
     {
         is_click = true
         mousePressed()
