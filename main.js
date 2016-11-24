@@ -2,7 +2,7 @@
 var img;
 
 // screen dims
-var w = 640;
+var w = 700;
 var h = 480;
 
 // theremin dims
@@ -13,7 +13,7 @@ var maxPitch   = 440;
 function setup()
 {
   createCanvas(w, h)
-  background(0)
+  background(128)
   
   img = loadImage("img/hand.png");
   
