@@ -3,7 +3,7 @@ var img;
 
 // screen dims
 var w = 700;
-var h = 600;
+var h = 480;
 
 // theremin dims
 var numOctaves = 3;
@@ -53,8 +53,6 @@ function touchStarted()
         touches[0]["x"] >= 240 &&
         touches[0]["x"] <= 490)
     {
-        fill(255)
-        rect(20,20,20,20)
         is_click = true
         mousePressed()
     }
