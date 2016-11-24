@@ -2,7 +2,7 @@ body {padding: 0; margin: 0; background: #000000;}
 h2   { color: #ffffff; font-family: sans-serif;}
 a    { color: #ffffff; }
         
-a:hover, a:active, a:focus { color: #0000ff; }
+a:hover, a:active, a:focus { color: #0000FF; }
         
 canvas
 {
@@ -29,5 +29,5 @@ div
     margin-top:  -240px;
     margin-left: -350px;
     z-index:     0;
-    font-size: 220%
+    font-size:   220%
 }

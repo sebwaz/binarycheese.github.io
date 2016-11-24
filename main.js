@@ -3,7 +3,7 @@ var img;
 
 // screen dims
 var w = 700;
-var h = 480;
+var h = 600;
 
 // theremin dims
 var numOctaves = 3;
@@ -87,7 +87,34 @@ var lock_saw3 = false
 function draw()
 {
   /* place hand writing */
+    background(128)
   // image(img, 0, 0);
+
+  /* THEREMIN TEXT */
+  textSize(24);
+  fill(255, 255, 255);
+
+  if (mouseIsPressed)
+  {
+    text(heightToHz(mouseY).toFixed(2), 50, 520);
+  }
+  else if (touches[0] !== undefined)
+  {
+    text((heightToHz(touches[0]["y"])).toFixed(2) + ' Hz', 50, 520);
+  }
+  else { text('...', 70, 520); }
+    
+  if (touches[1] !== undefined)
+  {
+    text((heightToHz(touches[1]["y"])).toFixed(2) + ' Hz', 50, 550);
+  }
+  else { text('...', 70, 550); }
+    
+  if (touches[2] !== undefined)
+  {
+    text((heightToHz(touches[2]["y"])).toFixed(2) + ' Hz', 50, 580);
+  }
+  else { text('...', 70, 580); }
 
   /* START OSC */
   
