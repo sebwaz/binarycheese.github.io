@@ -7,13 +7,12 @@ a:hover, a:active, a:focus { color: #0000FF; }
 canvas
 {
     padding:     0;
-    margin:      auto;
     display:     block;
     position:    absolute;
-    top:         0;
-    bottom:      0;
-    left:        0;
-    right:       0;
+    top:         50%;
+    left:        50%;
+    margin-top:  -240px;
+    margin-left: -425px;
     z-index:     -1;
 }
 
@@ -30,4 +29,18 @@ div
     margin-left: -350px;
     z-index:     0;
     font-size:   220%
+}
+
+.footer
+{
+    color:          grey;
+    font-family:    sans-serif;
+    font-size:      12px;
+    padding:        0px;
+    display:        block;
+    position:       absolute;
+    text-align:     center;
+    top:            100%;
+    left:           50%;
+    margin-top:     -40px;
 }

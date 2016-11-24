@@ -9,13 +9,19 @@ var h = 480;
 var numOctaves = 3;
 var maxPitch   = 440;
 
+//for rotator
+a = 0
+b = 0.5*Math.PI
+c = 1*Math.PI
+d = 1.5*Math.PI
+
 // on init
 function setup()
 {
   createCanvas(w, h)
   background(128)
   
-  img = loadImage("img/hand.png");
+  img = loadImage("img/hand2.png");
   
   // saws 3x osc
   saw1 = new p5.Oscillator('sawtooth');
@@ -38,9 +44,9 @@ var is_click = false
 function touchStarted()
 {
     // interpret as mouse click over links areas
-    if (touches[0]["y"] >= 80 &&
+    if (touches[0]["y"] >= 80  &&
         touches[0]["y"] <= 160 &&
-        touches[0]["x"] >= 50 &&
+        touches[0]["x"] >= 50  &&
         touches[0]["x"] <= 215 ||
         
         touches[0]["y"] >= 150 &&
@@ -50,8 +56,8 @@ function touchStarted()
         
         touches[0]["y"] >= 270 &&
         touches[0]["y"] <= 350 &&
-        touches[0]["x"] >= 315 &&
-        touches[0]["x"] <= 565)
+        touches[0]["x"] >= 50  &&
+        touches[0]["x"] <= 215)
     {
         is_click = true
         mousePressed()
@@ -94,7 +100,7 @@ var lock_saw3 = false
 function draw()
 {
   /* place hand writing */
-  // image(img, 0, 0);
+  image(img, 0, 0);
 
   /* START OSC */
   
@@ -180,4 +186,65 @@ function draw()
     saw1.stop()
     lock_saw1 = false
   }
+    
+    /* CALCULATE XY OFFSETS */
+  n = 17*Math.pow(sin(a), 2) * (sin(a) < 0 ? -1 : 1);
+  m = 17*Math.pow(cos(a), 2) * (cos(a) < 0 ? -1 : 1);
+  
+  o = 17*Math.pow(sin(b), 2) * (sin(b) < 0 ? -1 : 1);
+  p = 17*Math.pow(cos(b), 2) * (cos(b) < 0 ? -1 : 1);
+
+  q = 17*Math.pow(sin(c), 2) * (sin(c) < 0 ? -1 : 1);
+  r = 17*Math.pow(cos(c), 2) * (cos(c) < 0 ? -1 : 1);
+    
+  s = 17*Math.pow(sin(d), 2) * (sin(d) < 0 ? -1 : 1);
+  t = 17*Math.pow(cos(d), 2) * (cos(d) < 0 ? -1 : 1);
+    
+  /* DRAW SQUARES */
+    if (touches[0] !== undefined || mouseIsPressed)
+    {
+        fill('#FFFFFF')
+        rect(604+n, 104+m, 32, 32);
+        rect(660+o, 104+p, 32, 32);
+        rect(716+q, 104+r, 32, 32);
+        rect(604+o, 160+p, 32, 32);
+        rect(660+q, 160+r, 32, 32);
+        rect(716+s, 160+t, 32, 32);
+        rect(604+q, 216+r, 32, 32);
+        rect(660+s, 216+t, 32, 32);
+        rect(716+n, 216+m, 32, 32);
+    }
+    else
+    {      
+        fill('#DE3964')
+        rect(604+n, 104+m, 32, 32);
+        fill('#fbf8ab')
+        rect(660+o, 104+p, 32, 32);
+        fill('#135f91')
+        rect(716+q, 104+r, 32, 32);
+        fill('#f83d44')
+        rect(604+o, 160+p, 32, 32);
+        fill('#ffb03a')
+        rect(660+q, 160+r, 32, 32);
+        fill('#054b49')
+        rect(716+s, 160+t, 32, 32);
+        fill('#b30100')
+        rect(604+q, 216+r, 32, 32);
+        fill('#ff7935')
+        rect(660+s, 216+t, 32, 32);
+        fill('#002e2e')
+        rect(716+n, 216+m, 32, 32);
+
+        /* INCREMENT */
+        a += 0.02;
+        b += 0.02;
+        c += 0.02;
+        d += 0.02;
+        
+        /* DON'T OVERFLOW */
+        a %= 2*Math.PI;
+        b %= 2*Math.PI;
+        c %= 2*Math.PI;
+        d %= 2*Math.PI;
+    }
 }
