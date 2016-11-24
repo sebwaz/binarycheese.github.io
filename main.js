@@ -38,18 +38,18 @@ var is_click = false
 function touchStarted()
 {
     // interpret as mouse click over links areas
-    if (touches[0]["y"] >= 150 &&
-        touches[0]["y"] <= 230 &&
+    if (touches[0]["y"] >= 80 &&
+        touches[0]["y"] <= 160 &&
         touches[0]["x"] >= 0 &&
         touches[0]["x"] <= 140 ||
         
-        touches[0]["y"] >= 220 &&
-        touches[0]["y"] <= 300 &&
+        touches[0]["y"] >= 150 &&
+        touches[0]["y"] <= 230 &&
         touches[0]["x"] >= 280 &&
         touches[0]["x"] <= 420 ||
         
-        touches[0]["y"] >= 340 &&
-        touches[0]["y"] <= 420 &&
+        touches[0]["y"] >= 270 &&
+        touches[0]["y"] <= 350 &&
         touches[0]["x"] >= 240 &&
         touches[0]["x"] <= 490)
     {
@@ -93,7 +93,6 @@ var lock_saw3 = false
 
 function draw()
 {
-
   /* place hand writing */
   // image(img, 0, 0);
 
