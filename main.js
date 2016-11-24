@@ -13,7 +13,7 @@ var maxPitch   = 440;
 function setup()
 {
   createCanvas(w, h)
-  background(128)
+  background(0)
   
   img = loadImage("img/hand.png");
   
@@ -38,22 +38,31 @@ var is_click = false
 function touchStarted()
 {
     // interpret as mouse click over links areas
-    if (touches[0]["y"] >= 175 &&
-        touches[0]["y"] <= 245 &&
-        touches[0]["x"] >= 230 &&
-        touches[0]["x"] <= 325 ||
+    if (touches[0]["y"] >= 150 &&
+        touches[0]["y"] <= 230 &&
+        touches[0]["x"] >= 0 &&
+        touches[0]["x"] <= 140 ||
         
-        touches[0]["y"] >= 145 &&
-        touches[0]["y"] <= 215 &&
-        touches[0]["x"] >= 100 &&
-        touches[0]["x"] <= 195)
+        touches[0]["y"] >= 220 &&
+        touches[0]["y"] <= 300 &&
+        touches[0]["x"] >= 280 &&
+        touches[0]["x"] <= 420 ||
+        
+        touches[0]["y"] >= 340 &&
+        touches[0]["y"] <= 420 &&
+        touches[0]["x"] >= 240 &&
+        touches[0]["x"] <= 490)
     {
+        fill(255)
+        rect(20,20,20,20)
         is_click = true
         mousePressed()
     }
     // guarantees no zoom/pan during multitouch
     else { return false }
 }
+
+
 
 // If no touchEnded() function is defined, the mouseReleased()
 // function will be called instead if it is defined.
@@ -71,12 +80,12 @@ function touchEnded()
 
 
 
-
 // convert height to Hz
 function heightToHz(currentPos)
 {
   return (Math.pow(2, (currentPos-h)/(h/numOctaves)))*maxPitch
 }
+
 
 
 // make sure one touch at a time
@@ -86,35 +95,9 @@ var lock_saw3 = false
 
 function draw()
 {
+
   /* place hand writing */
-    background(128)
   // image(img, 0, 0);
-
-  /* THEREMIN TEXT */
-  textSize(24);
-  fill(255, 255, 255);
-
-  if (mouseIsPressed)
-  {
-    text(heightToHz(mouseY).toFixed(2), 50, 520);
-  }
-  else if (touches[0] !== undefined)
-  {
-    text((heightToHz(touches[0]["y"])).toFixed(2) + ' Hz', 50, 520);
-  }
-  else { text('...', 70, 520); }
-    
-  if (touches[1] !== undefined)
-  {
-    text((heightToHz(touches[1]["y"])).toFixed(2) + ' Hz', 50, 550);
-  }
-  else { text('...', 70, 550); }
-    
-  if (touches[2] !== undefined)
-  {
-    text((heightToHz(touches[2]["y"])).toFixed(2) + ' Hz', 50, 580);
-  }
-  else { text('...', 70, 580); }
 
   /* START OSC */
   
