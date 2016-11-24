@@ -87,7 +87,7 @@ var lock_saw3 = false
 function draw()
 {
   /* place hand writing */
-  image(img, 0, 0);
+  // image(img, 0, 0);
 
   /* START OSC */
   
