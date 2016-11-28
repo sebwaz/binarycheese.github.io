@@ -21,7 +21,7 @@ function setup()
   createCanvas(w, h)
   background(0)
   
-  img = loadImage("img/hand2.png");
+  img = loadImage("img/hand.png");
   
   // saws 3x osc
   saw1 = new p5.Oscillator('sawtooth');

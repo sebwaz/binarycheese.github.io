@@ -1,81 +1,65 @@
 body {padding: 0; margin: 0; background: #000000;}
-h2   {color: #ffffff; font-family: sans-serif;}
-a    {color: #ffffff; text-decoration: none;}
-        
+a    {color: #ffffff; text-decoration: none;}        
 a:hover, a:active, a:focus { color: #de3964; }
 
 div
 {
+    color:       #ffffff;
+    font-family: sans-serif;
     width:       700px;
-    height:      480px;
+    height:      400px;
     padding:     0;
     display:     block;
     position:    absolute;
-    top:         0%;
-    left:        0%;
-    margin-top:  50px;
-    margin-left: 50px;
+    top:         50%;
+    left:        50%;
+    margin-top:  -300px;
+    margin-left: -350px;
     z-index:     0;
-    font-size:   220%
+    font-size:   220%;
 }
 
-/*remove list style (circles)*/
-.collapsible
+h1
+{
+    font-size:   100%;
+    margin-left: 40px;
+}
+
+.collapsible li
 {	
 	list-style: none;
-    margin-top:  -40px;
-    margin-left: -40px;
 }
 
-/*set border for every line of menu nad remove top border becouse we dont want double border with header border. */
-.collapsible li
-{ 
-    border-top:0;
-    margin: 0;
-}
-
-/*remove decoration from text links and treat it as a block.*/
-.collapsible li a
-{
-    color: #FFFFFF;
-	text-decoration:none;
-    display:block;
-}
-
-/*we dont want text to be underline as regular link*/
 .collapsible li a:hover,
 .collapsible li a:active
 {
-    color: #000000;
+    color: #de3964;
     text-decoration:none;
-    background: #de3964;
 }
-/*remove list style (circles) for submenu*/    
-.collapsible li ul {
-	list-style: none;
-    display: none;
-    margin:0;
-    padding:0;
+    
+.collapsible li ul
+{
+	list-style:    none;
+    display:       none;
+    padding:       0px;
+    margin-bottom: 40px;
+    margin-top:    10px;
+    
+    font-size:     18px;
+}
+   
+.collapsible li ul li a
+{ 
+    text-decoration: underline;
 }
 
-/*remove border and set only bottom border for submenu*/    
-.collapsible li ul li {
-	margin:0; 
-    border:0; 
+.collapsible .dropdown > a
+{
+    color:           #FFFFFF;
+	text-decoration: none;
+    display:         block;
+    margin-top:      10px;
+    border-bottom:   1px dotted white;
 }
-/*remove bottom border from last element in submenu*/    
-.collapsible li ul li:last-child {
-	border-bottom:0;}
-/*set padding for submenu to be inline with maimenu*/    
-.collapsible li ul li a { 
-    display: block; 
-    padding-left: 30px;
-}
-/*remove text decoration for links*/
-.collapsible li ul li a:hover {
-text-decoration: none;
-color: #de3964; }
-/*for menu witch have a submenu display some icom*/
-.collapsible .dropdown > a {}
-/*set some hover color on drop down menu*/
+
 .collapsible .dropdown > a:hover {}

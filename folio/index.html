@@ -14,54 +14,147 @@
     
   <body>
       <div>
-          
           <h2>
             <ul class="collapsible">
-                <li class="dropdown"><a class="" href="#">MARIO AI</a>
+                <li class="dropdown"><a class="">MARIO AI</a>
                     <ul>
+                        <li>
+                            Mario AI was a team project completed for a course in Computer
+                            Science at UCLA: <i>AI Playing Games</i> (CS 188, Spring 2016).
+                            Building upon a Java codebase provided by the <a href="http://www.marioai.org/" target="_blank">Mario AI Championship 2012</a>,
+                            our team developed an AI agent that could play a competition variant of
+                            the Nintendo platformer, Super Mario.<br>
+                            <br>
+                            At the time of our work, Super Mario was a “solved” computational problem:
+                            a number of agent strategies had been developed to conquer levels reliably
+                            and with little overhead training or computation. In fact, the champion agent
+                            of our reference competition did not implement machine learning at all: the winning
+                            strategy was based on an A* heuristic search algorithm. We found a neural
+                            network agent that was capable of accomplishing the task; however, it was
+                            too complex to run in real time. Moreover, the strategy manifested within
+                            the neural network was difficult to interpret due to the “black box”
+                            nature of such machine learning techniques.<br>
+                            <br>
+                            Our objective was two-fold:
+                            foremost, we wanted to implement a machine learning algorithm that
+                            imitated the performance of our reference neural network agent while
+                            reducing the computational load. Additionally, we wanted our machine
+                            learning algorithm to interpret the strategy manifested within the neural
+                            network and present it in a human-readable format. I posited that we
+                            could accomplish both of these tasks by training secondary machine
+                            learning algorithms on the neural network’s behavior.<br>
+                            <br>
+                            See our video presentation on Mario AI:<br>
+                            <br>
+                        </li>
                         <li><iframe width="560" height="315" src="https://www.youtube.com/embed/-ibO6uv-yVM?list=PLNfka63QcB7PdrU2V6s9hbyIabicqVusg" frameborder="0" allowfullscreen></iframe></li>
-                        <li><a href="#">Comments</a></li>
+                        <li>
+                            <br>
+                            Our first action was to use a self-organizing map (SOM) machine learning
+                            algorithm sourced from <a href="http://java-ml.sourceforge.net/" target="_blank">Java-ML</a> to reduce the dimensionality of a representative
+                            dataset of game-states and reveal groupings. We collected more than 100,000
+                            game-state snapshots during neural network agent gameplay. The resultant SOM was
+                            run through a clustering algorithm to determine group membership. From group
+                            membership, we determined centroid vectors of each grouping. We considered these
+                            centroid vectors to be prototypical scenarios a player would encounter in-game.<br>
+                            <br>
+                            These scenarios were incorporated into a state-action table (or Q-table). Each
+                            state was a centroid vector determined by clustering, and each action was a
+                            possible button combination given the player controller. The values in each cell
+                            of this table represented the expected reward for carrying out an action given a
+                            certain state.<br>
+                            <br>
+                            The values saved in this table were determined by a Q-learning reinforcement
+                            algorithm. This algorithm was fed the game-states and corresponding actions of
+                            the neural network agent over several gameplay iterations. The incoming game-states
+                            were matched to a centroid vector according to minimum Euclidean distance; actions
+                            from the neural network agent had a one-to-one correspondence with actions in the
+                            Q-table.<br>
+                            <br>
+                            A manual inspection of our Q-table revealed that our agent was able to represent
+                            in an interpretable way many of the basic local strategies manifested within the
+                            neural network (e.g. jump [action] in the presence of a goomba or pit [state], wait
+                            [action] while a piranha plant is protruding from its pipe [state]). Through
+                            reinforcement learning, the Q-table was successful in reducing the computational
+                            load of the reference neural network agent; however, this came at the cost of
+                            performance. Our agent failed to learn global strategies. In particular, it failed
+                            to learn that the ultimate goal was to progress to the right-most edge of the map.
+                            We believe this shortcoming was the result of a causal limitation imposed by the
+                            reinforcement learning algorithm, but we also consider the possibility that we did
+                            not properly tune the value of rewards: perhaps the agent did not learn to push
+                            rightward because it felt that the relative safety of staying left was more valuable.<br>
+                            <br>
+                            In representing some neural network strategies as state-action relationships, we
+                            accomplished one of our two goals. If we would like more complex behavior, our next
+                            step would be to use hierarchical clustering to generate additional Q-table states. This
+                            would allow greater nuance in how our agent responds to any particular situation. Of such
+                            algorithms, our team is most familiar with techniques such as recurrent neural networks;
+                            however, such a technique would be excessive, as it is more complex than the reference
+                            agent in question. The integration of a simple scheme for long-term memory or planning
+                            will require further research on our part.<br>
+                            <br>
+                            Find our repository on <a href="https://github.com/MatteoVH/marioai" target="_blank">GitHub</a>. An introductory presentation I have prepared on Q-learning
+                            and neural networks can be found <a href="img/mario/machine_learning_presentation_cs35.pdf" target="_blank">here</a>.
+                        </li>
                     </ul>
                 </li>
-                <li class="dropdown"><a class="" href="#">GENRE CLUSTERING</a>
+                <li class="dropdown"><a class="">GENRE CLUSTERING</a>
+                    <ul>
+                        <li><img src="img/genre/SOM_rgb_inputs.png"></li>
+                        <li><img src="img/genre/SOM_rgb_reduction.png"></li>
+                        <li><img src="img/genre/SOM_rgb_clusters.png"></li>
+                        <li><img src="img/genre/SOM_test_4.png"></li>
+                        <li><img src="img/genre/SOM_test_raw.png"></li>
+                        <li><img src="img/genre/SOM_test_z.png"></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="">MOTION OPPONENCY</a>
+                    <ul>
+                        <li>Summary</li>
+                        <li><a href="img/motion/manuscript.pdf">manuscript</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="">TRAVELING SALESMAN</a>
+                    <ul>
+                        <li>
+                            I've recently become interested in the relationship
+                            between computibility and topology. I've moved the Traveling
+                            Salesman Problem to a flat torus (as opposed to bounded).
+                            I have modeled the cities as interacting automata.
+                            The inspiration is molecular bonding behavior.
+                            Although I've not taken specific rules from bonding, I have
+                            adopted the sentiment of electronegativity and stability: an
+                            automata wants to link, and wants to link to its best matches.
+                            If its not at a best match, it will break a poor match and link
+                            to a better one. I wonder if this transformation of the problem
+                            topology results in a transformation of the solution topology
+                            that is parabolic: regardless of the starting conditions, the
+                            state changes of the automata ultimately result in a halt
+                            (due to "most stable" position being reached) at the ideal
+                            solution.
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="">RUBIK'S CYCLE</a>
                     <ul>
                         <li><a href="#">Content</a></li>
                         <li><a href="#">Comments</a></li>
                         <li><a href="#">Tags</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a class="" href="#">MOTION OPPONENCY</a>
+                <li class="dropdown"><a class="">ANALOGIES</a>
                     <ul>
-                        <li><a href="#">Content</a></li>
-                        <li><a href="#">Comments</a></li>
-                        <li><a href="#">Tags</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a class="" href="#">TRAVELING SALESMAN</a>
-                    <ul>
-                        <li><a href="#">Content</a></li>
-                        <li><a href="#">Comments</a></li>
-                        <li><a href="#">Tags</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a class="" href="#">RUBIK'S CYCLE</a>
-                    <ul>
-                        <li><a href="#">Content</a></li>
-                        <li><a href="#">Comments</a></li>
-                        <li><a href="#">Tags</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a class="" href="#">ANALOGIES</a>
-                    <ul>
-                        <li><a href="#">Content</a></li>
-                        <li><a href="#">Comments</a></li>
-                        <li><a href="#">Tags</a></li>
+                        <li><a href="http://analogies.thatsebas.com/">download</a></li>
+                        <li><a href="http://www.suspendmag.com/blog/sleepparalysis">SUSPEND feature</a></li>
                     </ul>
                 </li>               
               </ul>
-              <a href="../" style="text-decoration: underline">return</a><br>
-          </h2>
-      </div>
+            </h2>
+
+            <h1>
+                <a href="../">return</a><br>
+            </h1>
+       </div>
   </body>
     
 </html>
