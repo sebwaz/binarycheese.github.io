@@ -19,82 +19,88 @@
                 <li class="dropdown"><a class="">MARIO AI</a>
                     <ul>
                         <li>
-                            Mario AI was a team project completed for a course in Computer
-                            Science at UCLA: <i>AI Playing Games</i> (CS 188, Spring 2016).
-                            Building upon a Java codebase provided by the <a href="http://www.marioai.org/" target="_blank">Mario AI Championship 2012</a>,
-                            our team developed an AI agent that could play a competition variant of
-                            the Nintendo platformer, Super Mario.<br>
+                            UCLA, CS 188: <i>AI Playing Games</i> (Spring 2016)<br>
                             <br>
-                            At the time of our work, Super Mario was a “solved” computational problem:
-                            a number of agent strategies had been developed to conquer levels reliably
-                            and with little overhead training or computation. In fact, the champion agent
-                            of our reference competition did not implement machine learning at all: the winning
-                            strategy was based on an A* heuristic search algorithm. We found a neural
-                            network agent that was capable of accomplishing the task; however, it was
-                            too complex to run in real time. Moreover, the strategy manifested within
-                            the neural network was difficult to interpret due to the “black box”
-                            nature of such machine learning techniques.<br>
+                            <i>Super Mario</i> is a solved problem. Any number of autonomous
+                            agents can play the game well. For us, <i>Super Mario</i> was a
+                            platform from which we could ask questions not of performance,
+                            but of logic: what are the rules of behavior that fix within the
+                            “black box” of neural networks? and what methods can we use to
+                            distill these rules?<br>
                             <br>
-                            Our objective was two-fold:
-                            foremost, we wanted to implement a machine learning algorithm that
-                            imitated the performance of our reference neural network agent while
-                            reducing the computational load. Additionally, we wanted our machine
-                            learning algorithm to interpret the strategy manifested within the neural
-                            network and present it in a human-readable format. I posited that we
-                            could accomplish both of these tasks by training secondary machine
-                            learning algorithms on the neural network’s behavior.<br>
+                            Our answer was a synthesis of distributed and sequential logic.<br>
                             <br>
-                            See our video presentation on Mario AI:<br>
+                            We convened a data set of 100,000 snapshots of player and
+                            environment state. This data was culled from the recorded gameplay
+                            of a neural network agent and was fed into a self-organizing map.
+                            The map clustered snapshots about a two-dimensional plane,
+                            reducing input dimensionality. Labeled by hand, the resultant
+                            clusters were taken to be symbolic of a set of prototypical game
+                            states a player might encounter. They determined the input to our
+                            state-action table.<br>
+                            <br>
+                            A state-action table expresses the expected value of an action in
+                            response to a given state. As coded in our table, such expectations
+                            were informed by reinforcement learning. Unlike orthodox
+                            reinforcement learning, our conditioning was not by direct agency,
+                            but by observation of a neural network agent. Our actions were
+                            symbolic of the set of all coherent combinations of key presses on
+                            the game controller.<br>
+                            <br>
+                            By its nature, a fixed state-action table may be reduced to a series
+                            of conditional statements: “if state then action.”  We worked to
+                            make our state-action table into an accurate simulation of the neural
+                            network. If we were successful, we could by transitivity approximate the
+                            “program” fixed within the neural network as a series of conditional
+                            statements.<br>
                             <br>
                         </li>
-                        <li><iframe width="560" height="315" src="https://www.youtube.com/embed/-ibO6uv-yVM?list=PLNfka63QcB7PdrU2V6s9hbyIabicqVusg" frameborder="0" allowfullscreen></iframe></li>
+                        <li><iframe width="660" height="370" src="https://www.youtube.com/embed/-ibO6uv-yVM?list=PLNfka63QcB7PdrU2V6s9hbyIabicqVusg" frameborder="0" allowfullscreen></iframe></li>
                         <li>
                             <br>
-                            Our first action was to use a self-organizing map (SOM) machine learning
-                            algorithm sourced from <a href="http://java-ml.sourceforge.net/" target="_blank">Java-ML</a> to reduce the dimensionality of a representative
-                            dataset of game-states and reveal groupings. We collected more than 100,000
-                            game-state snapshots during neural network agent gameplay. The resultant SOM was
-                            run through a clustering algorithm to determine group membership. From group
-                            membership, we determined centroid vectors of each grouping. We considered these
-                            centroid vectors to be prototypical scenarios a player would encounter in-game.<br>
+                            We found that we could not adequately simulate the behavior of a neural
+                            network.<br>
                             <br>
-                            These scenarios were incorporated into a state-action table (or Q-table). Each
-                            state was a centroid vector determined by clustering, and each action was a
-                            possible button combination given the player controller. The values in each cell
-                            of this table represented the expected reward for carrying out an action given a
-                            certain state.<br>
+                            The strategies which manifested in our agent were fairly crude: our
+                            Mario leapt in the presence of Goombas, waited for Piranha Plants to
+                            disappear from view. These tactics were aspects of the neural network’s
+                            behavior, assuredly; however, they were oversimplifications. Our agent’s
+                            shortcomings were due to a lack of state granularity and a naivety to
+                            long-term rewards.<br>
                             <br>
-                            The values saved in this table were determined by a Q-learning reinforcement
-                            algorithm. This algorithm was fed the game-states and corresponding actions of
-                            the neural network agent over several gameplay iterations. The incoming game-states
-                            were matched to a centroid vector according to minimum Euclidean distance; actions
-                            from the neural network agent had a one-to-one correspondence with actions in the
-                            Q-table.<br>
+                            By operating on state classes, our agent was desensitized to possible
+                            interactions between features within a state class. The neural network
+                            remained mindful of such interactions by operating on state features
+                            directly. Our agent, as a result, could not identify exceptional states
+                            or subclasses as known to the neural network: reinforcement learning
+                            worked in futility toward the representation of multiple strategies
+                            within the space of a single strategy. Discriminable states were poorly
+                            convoluted within single state classes.<br>
                             <br>
-                            A manual inspection of our Q-table revealed that our agent was able to represent
-                            in an interpretable way many of the basic local strategies manifested within the
-                            neural network (e.g. jump [action] in the presence of a goomba or pit [state], wait
-                            [action] while a piranha plant is protruding from its pipe [state]). Through
-                            reinforcement learning, the Q-table was successful in reducing the computational
-                            load of the reference neural network agent; however, this came at the cost of
-                            performance. Our agent failed to learn global strategies. In particular, it failed
-                            to learn that the ultimate goal was to progress to the right-most edge of the map.
-                            We believe this shortcoming was the result of a causal limitation imposed by the
-                            reinforcement learning algorithm, but we also consider the possibility that we did
-                            not properly tune the value of rewards: perhaps the agent did not learn to push
-                            rightward because it felt that the relative safety of staying left was more valuable.<br>
+                            Our agent’s behavior indicated no understanding of the long-term value
+                            of progress. Loitering was a recurring tactic, as idleness guaranteed
+                            Mario’s score and well-being. This tendency toward stability was an
+                            impediment to the ultimate goal of stage completion. We attempted to solve this issue by the addition of a motion heuristic:
+                            “always consider forward motion to be more valuable than idleness.” This
+                            adjustment was only moderately useful. Our agent often protested by
+                            driving itself into walls, standing still in effect.<br>
                             <br>
-                            In representing some neural network strategies as state-action relationships, we
-                            accomplished one of our two goals. If we would like more complex behavior, our next
-                            step would be to use hierarchical clustering to generate additional Q-table states. This
-                            would allow greater nuance in how our agent responds to any particular situation. Of such
-                            algorithms, our team is most familiar with techniques such as recurrent neural networks;
-                            however, such a technique would be excessive, as it is more complex than the reference
-                            agent in question. The integration of a simple scheme for long-term memory or planning
-                            will require further research on our part.<br>
-                            <br>
-                            Find our repository on <a href="https://github.com/MatteoVH/marioai" target="_blank">GitHub</a>. An introductory presentation I have prepared on Q-learning
-                            and neural networks can be found <a href="img/mario/machine_learning_presentation_cs35.pdf" target="_blank">here</a>.
+                            In pursuit of a more representative set of state classes, we recommend feature
+                            selection and hierarchical clustering. In pursuit of goal-oriented
+                            behavior, we recommend some prediction schema: such a mechanism would
+                            determine a present action not only by its expected value, but also by
+                            the expected value of subsequent actions in predicted future states.<br>
+                            <br>                            
+                            Our self-organizing map was sourced from the
+                            <a href="http://java-ml.sourceforge.net/" target="_blank">Java-ML library</a>.
+                            Our agent
+                            was built upon the Java codebase provided by
+                            <a href="http://www.marioai.org/" target="_blank">Mario AI Championship 2012</a>.
+                            Our code is available on
+                            <a href="https://github.com/MatteoVH/marioai" target="_blank">GitHub</a>.
+                            An introductory presentation I have prepared on reinforcement learning
+                            and neural networks can be found
+                            <a href="img/mario/machine_learning_presentation_cs35.pdf" target="_blank">here</a>.
                         </li>
                     </ul>
                 </li>

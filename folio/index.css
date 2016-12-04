@@ -11,9 +11,8 @@ div
     padding:     0;
     display:     block;
     position:    absolute;
-    top:         50%;
+    top:         0%;
     left:        50%;
-    margin-top:  -300px;
     margin-left: -350px;
     z-index:     0;
     font-size:   220%;
@@ -44,7 +43,7 @@ h1
     padding:       0px;
     margin-bottom: 40px;
     margin-top:    10px;
-    
+
     font-size:     18px;
 }
    
