@@ -104,20 +104,82 @@
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown"><a class="">GENRE CLUSTERING</a>
+                <li class="dropdown"><a class="">GENRE CLASSIFICATION</a>
                     <ul>
-                        <li><img src="img/genre/SOM_rgb_inputs.png"></li>
-                        <li><img src="img/genre/SOM_rgb_reduction.png"></li>
-                        <li><img src="img/genre/SOM_rgb_clusters.png"></li>
-                        <li><img src="img/genre/SOM_test_4.png"></li>
-                        <li><img src="img/genre/SOM_test_raw.png"></li>
-                        <li><img src="img/genre/SOM_test_z.png"></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a class="">MOTION OPPONENCY</a>
-                    <ul>
-                        <li>Summary</li>
-                        <li><a href="img/motion/manuscript.pdf">manuscript</a></li>
+                        <li>
+                            UCLA, Psych 186C: <i>Neural Networks</i> (Winter 2016)<br>
+                            <br>
+                            Streaming services dominate audio entertainment. In commanding massive libraries,
+                            subscribers often rely on automated suggestion to navigate unexplored content. The
+                            task of directing users to content which consistently engages them relies on an
+                            understanding of how the audience classifies said content. We applied machine
+                            learning to this endeavor, invoking both supervised and unsupervised learning
+                            techniques.<br>
+                            <br>
+                            The data point for each song was a 1400-element vector. These elements were culled
+                            from Fourier and chroma transformations of the song waveform. Features such as tempo,
+                            duration, loudness, key, and mode were appended to this transform data.<br>
+                            <br>
+                            We programmed a self-organizing map (SOM) in MATLAB to explore the potential of
+                            unsupervised learning. Unlike a supervised learning algorithm, an SOM is never trained
+                            on labelled data. It uses features alone to cluster like inputs.<br>
+                            <br>
+                        </li>
+                        <li align="center"><img src="img/genre/SOM_rgb_reduction.png"></li>
+                        <li align="center"><img src="img/genre/SOM_rgb_clusters.png"></li>
+                        <li>
+                            A set of 100 color vectors were fed into our SOM to evaluate our program. Note how,
+                            in the figures above, the color vectors congregate into distinct groups with groups of
+                            like colors placed adjacent to one another.<br>
+                            <br>
+                            Color is represented as a 3-element vector and translates naturally to color on screen,
+                            but a self-organizing map may handle n-element vectors. Having validated our program, we
+                            fed our music corpus into the SOM using human-rated labels to visualize clustering.<br>
+                            <br>
+                        </li>
+                        <li align="center"><img src="img/genre/SOM_test_4.png"></li>
+                        <li align="center"><img src="img/genre/SOM_test_raw.png"></li>
+                        <li align="center"><img src="img/genre/SOM_test_z.png"></li>
+                        <li>
+                            The figures above are a 4-genre mapping and two 2-genre mappings. The first two mappings
+                            used unnormalized features; the last mapping used Z-scores as features. Unlike the color
+                            example, clusters were not clearly visible without labeling. Data points of the same
+                            color belonged to the same human-rated genre.<br>
+                            <br>
+                            On visual inspection, we see that these features had some power to cluster genres: although
+                            spacial boundaries were not evident between groups, songs of the same genre tend to congregate.<br>
+                            <br>
+                            Due to the lack of spatial boundaries, groups could not be drawn fairly. As such, we could not
+                            objectively evaluate the purity of groups. Our last mapping was an exception. In it, songs had
+                            apparently polarized. Drawing a hyperplane at y = 20 to define top and bottom groups, we found the
+                            purity of the mapping to be 77.5%.<br>
+                            <br>
+                            We moved on to a supervised learning algorithm: a feedforward neural network tuned by
+                            backpropagation.<br>
+                            <br>
+                            Genres are purely interpretive. Classifications as arbitrary as relaxed, maximalist, and
+                            warm are all valid genres. They are simply abstract classes: so long as they may be distinguished
+                            by patterns manifest in their musical features, we can use any set of labels to understand them.
+                            This is the power of a supervised approach: a user assigns labels and the neural network learns
+                            what patterns distinguish label members.<br>
+                            <br>
+                        </li>
+                        <li align="center"><img src="img/genre/back-prop_test.png"></li>
+                        <li>
+                            We found that our feedforward neural network, exposed to the same 2-genre corpus as our final
+                            mapping, classified songs into the genres with similar performance. At
+                            its point of maximum cross-valid performance (used to prevent
+                            overfitting), the neural network delivered an accuracy of 82%.<br>
+                            <br>
+                            Genre classification is a highly subjective task. An SOM may provide the
+                            strongest genre definitions, but these do not necessarily correspond
+                            to the genre definitions that musical culture has produced. For this
+                            reason, we recommend the use of supervised learning techniques for
+                            the purpose of user-oriented genre classifications.<br>
+                            <br>
+                            Our data was sourced from the <a href="labrosa.ee.columbia.edu/millionsong/" target="_blank">Lab ROSA Million Song Database</a>.
+                            Our presentation may be found <a href="img/genre/genre_clustering_presentation_psy186.pdf" target="_blank">here</a>.
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="">TRAVELING SALESMAN</a>
@@ -139,6 +201,18 @@
                             (due to "most stable" position being reached) at the ideal
                             solution.
                         </li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="">MOTION OPPONENCY</a>
+                    <ul>
+                        <li>Summary</li>
+                        <li><a href="img/motion/manuscript.pdf">manuscript</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="">BOUNDARY EXTENSION</a>
+                    <ul>
+                        <li>Summary</li>
+                        <li><a href="img/motion/manuscript.pdf">manuscript</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="">RUBIK'S CYCLE</a>
