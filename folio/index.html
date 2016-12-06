@@ -189,47 +189,121 @@
                 <li class="dropdown"><a class="">TRAVELING SALESMAN</a>
                     <ul>
                         <li>
-                            I've recently become interested in the relationship
-                            between computibility and topology. I've moved the Traveling
-                            Salesman Problem to a flat torus (as opposed to bounded).
-                            I have modeled the cities as interacting automata.
-                            The inspiration is molecular bonding behavior.
-                            Although I've not taken specific rules from bonding, I have
-                            adopted the sentiment of electronegativity and stability: an
-                            automata wants to link, and wants to link to its best matches.
-                            If its not at a best match, it will break a poor match and link
-                            to a better one. I wonder if this transformation of the problem
-                            topology results in a transformation of the solution topology
-                            that is parabolic: regardless of the starting conditions, the
-                            state changes of the automata ultimately result in a halt
-                            (due to "most stable" position being reached) at the ideal
-                            solution.
+                            Personal project (Fall 2016 -  present)<br>
+                            <br>
+                            We have an understanding of distributed computation that regards objects
+                            in aggregate as substances: <i>annealing</i> and <i>coarsening</i>, terms from
+                            metallurgy, are as relevant to abstract neural networks as they are to
+                            physical materials. The state of such a substance may be defined as
+                            the combination of the states of its constituent objects. Each
+                            constituent state provides a coordinate: the coordinates together
+                            describe the overall substance state as a position in a
+                            high-dimensional error landscape.<br>
+                            <br>
+                            On the error landscape, altitude is a measure of correctness and
+                            a function of position. In optimization problems, we would like
+                            to transform our substance so that its position corresponds to
+                            some minimum or maximum altitude. Algorithms which conduct such
+                            transformations typically trade complexity with accuracy.
+                            Gradient descent, for example, is rapid but greedy; a Boltzmann
+                            machine, by contrast, is slow but absolute.<br>
+                            <br>
+                            Our knowledge of the bounds of computational complexity and of
+                            methods in nonlinear machine learning stand much to gain from an
+                            understanding of the connectivity between points in an error 
+                            landscape and how a substance may traverse that space. I’m
+                            fascinated by this relationship between computability and topology.<br>
+                            <br>
+                            With this project, I investigate methods of traversal that are not
+                            contingent upon error minimization. The NP-hard traveling salesman
+                            problem (TSP) provided an excellent platform for this investigation.
+                            Equating cities to objects and their connectivity to a substance, I
+                            ask: is it possible for a substance to reach the optimal state by the
+                            naive interaction of sovereign objects?<br>
+                            <br>
+                            Molecular bonding was a particular source of inspiration: atomic particles
+                            organize into meaningful structure on the basis of individual
+                            interactions.<br>
+                            <br>
+                        </li>
+                        <li align="center"><img src="img/tsp/single-path.gif"></li>
+                        <li>
+                            <br>
+                            The circle inscribed by any combination of three cities has a center
+                            that is equidistant from each of the cities. This radius, relative to
+                            the distance between the cities, proved useful in determining the path
+                            between them.<br>
+                            <br>
+                            Computing this circle for every combination of three cities would require at least
+                            <i>N-choose-3</i> operations, lending factorial complexity to the process;
+                            however, not all cities interact. Many of these circles would be
+                            superfluous as the cities within them would never be linked in an
+                            optimal solution.<br>
+                            <br>
+                            I warped the gameboard to be a flat torus and had cities “radiate”
+                            across the map. City spans that collided attempted to bond with one
+                            another. I found this to be an adequate approximation of the
+                            aforementioned circle-finding functionality, foregoing the superfluous
+                            circles and reducing the complexity to a polynomial of the number of
+                            cities and grid cells. The accuracy of this heuristic was contingent
+                            upon the grid cell density, such that an infinitely dense grid would
+                            give perfect accuracy.<br>
+                            <br>
+                            In the animation above, the cities bond to form a single cycle as their
+                            spans collide with one another. Paths that extend beyond the grid
+                            boundaries resume from the opposite end inwards.<br>
+                            <br>
+                        </li>
+                        <li align="center"><img src="img/tsp/double-path.gif"></li>
+                        <li>
+                            <br>
+                            Here we observe more complex bonding behavior, wherein pre-existing
+                            bonds are broken to allow for new ones.<br>
+                            <br>
+                            These breaks are determined by local behaviors of the city objects,
+                            with complete naivety to the overall cycle length. They occur when
+                            an unlinked or singly-linked city encounters a doubly-linked city
+                            (a “joint”). If the joint is linked to a city (a “limb”) that
+                            neighbors another unlinked or singly-linked city, the joint and
+                            limb will break their bond and link to their respective
+                            incompletely-linked neighbors. Ideally, from these naive bonding
+                            rules, an optimal cycle will emerge.<br>
+                            <br>
+                            In the animation above, a bug reveals itself: the naive bonding rules
+                            result in two separate cycles. TSP demands a single cycle containing every city.<br>
+                            <br>
+                            Can distributed computation provide some method for transforming
+                            an NP problem into a P problem? My intuition is no. But I explore
+                            the possibility by experimenting with modifications to TSP and
+                            determining if such transformations are game-breaking, or lend
+                            power to the distributed method.<br>
+                            <br>
+                            Track my progress on <a href="https://github.com/sebwaz/TSP_Automaton" target="_blank">GitHub</a>.
                         </li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="">MOTION OPPONENCY</a>
                     <ul>
-                        <li>Summary</li>
-                        <li><a href="img/motion/manuscript.pdf">manuscript</a></li>
+                        <li>Work in computational perception. More soon.</li>
+                        <li>Check out the <a href="img/motion/manuscript.pdf">manuscript</a>.</li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="">BOUNDARY EXTENSION</a>
                     <ul>
-                        <li>Summary</li>
-                        <li><a href="img/motion/manuscript.pdf">manuscript</a></li>
+                        <li>Work in computational perception. More soon.</li>
+                        <li>Check out our <a href="img/boundary/purc-poster.pdf">poster</a>.</li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="">RUBIK'S CYCLE</a>
                     <ul>
-                        <li><a href="#">Content</a></li>
-                        <li><a href="#">Comments</a></li>
-                        <li><a href="#">Tags</a></li>
+                        <li>An examination of the flexibility of mental representations. More soon.</li>
                     </ul>
                 </li>
                 <li class="dropdown"><a class="">ANALOGIES</a>
                     <ul>
-                        <li><a href="http://analogies.thatsebas.com/">download</a></li>
-                        <li><a href="http://www.suspendmag.com/blog/sleepparalysis">SUSPEND feature</a></li>
+                        <li>An album written and performed by yours truly.</li>
+                        <li>Available for <a href="http://analogies.thatsebas.com/">download</a>.</li>
+                        <li>Featured in <a href="http://www.suspendmag.com/blog/sleepparalysis">SUSPEND Magazine</a>.</li>
                     </ul>
                 </li>               
               </ul>
