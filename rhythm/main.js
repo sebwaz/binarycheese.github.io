@@ -33,28 +33,28 @@ var show_scores = 0;
 
 function preload()
 {
-    dup_a = loadSound('samples/160/2-1.wav');
-    tri_a = loadSound('samples/160/3-1.wav');
-    qua_a = loadSound('samples/160/4-1.wav');
+    dup_a = loadSound('samples/160/2-1.mp3');
+    tri_a = loadSound('samples/160/3-1.mp3');
+    qua_a = loadSound('samples/160/4-1.mp3');
     
-    dup_b = loadSound('samples/180/2-1.wav');
-    tri_b = loadSound('samples/180/3-1.wav');
-    qua_b = loadSound('samples/180/4-1.wav');
+    dup_b = loadSound('samples/180/2-1.mp3');
+    tri_b = loadSound('samples/180/3-1.mp3');
+    qua_b = loadSound('samples/180/4-1.mp3');
     
-    dup_c = loadSound('samples/240/2-1.wav');
-    tri_c = loadSound('samples/240/3-1.wav');
-    qua_c = loadSound('samples/240/4-1.wav');
+    dup_c = loadSound('samples/240/2-1.mp3');
+    tri_c = loadSound('samples/240/3-1.mp3');
+    qua_c = loadSound('samples/240/4-1.mp3');
     
-    dup_d = loadSound('samples/320/2-1.wav');
-    tri_d = loadSound('samples/320/3-1.wav');
-    qua_d = loadSound('samples/320/4-1.wav');
+    dup_d = loadSound('samples/320/2-1.mp3');
+    tri_d = loadSound('samples/320/3-1.mp3');
+    qua_d = loadSound('samples/320/4-1.mp3');
     
-    dup_e = loadSound('samples/360/2-1.wav');
-    tri_e = loadSound('samples/360/3-1.wav');
-    qua_e = loadSound('samples/360/4-1.wav');
+    dup_e = loadSound('samples/360/2-1.mp3');
+    tri_e = loadSound('samples/360/3-1.mp3');
+    qua_e = loadSound('samples/360/4-1.mp3');
     
-    right_sound = loadSound('samples/feedback/right.wav');
-    wrong_sound = loadSound('samples/feedback/wrong.wav');
+    right_sound = loadSound('samples/feedback/right.mp3');
+    wrong_sound = loadSound('samples/feedback/wrong.mp3');
     
     play_img = loadImage('img/playing.jpg');
 }
