@@ -33,6 +33,11 @@ var show_scores = 0;
 
 function preload()
 {
+    textSize(48);
+    text_color = color(0);
+    textAlign(CENTER, CENTER);
+    text("loading sounds...", w/2, h/2);
+    
     dup_a = loadSound('samples/160/2-1.mp3');
     tri_a = loadSound('samples/160/3-1.mp3');
     qua_a = loadSound('samples/160/4-1.mp3');
