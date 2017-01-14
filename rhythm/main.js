@@ -33,12 +33,6 @@ var show_scores = 0;
 
 function preload()
 {
-    createCanvas(w, h);
-    textSize(48);
-    text_color = color(0);
-    textAlign(CENTER, CENTER);
-    text("loading sounds...", w/2, h/2);
-    
     dup_a = loadSound('samples/160/2-1.mp3');
     tri_a = loadSound('samples/160/3-1.mp3');
     qua_a = loadSound('samples/160/4-1.mp3');
@@ -89,6 +83,8 @@ function knuth_shuffle(arr)
 
 function setup()
 {
+    createCanvas(w, h);
+    background(0);
     noStroke();
     
     textSize(24);
@@ -194,6 +190,7 @@ function touchStarted()
         if (mouseX > w/2+l_x-b_w/2 && mouseX < w/2+l_x+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
+            background(0);
             stop_sound();
             mode = 1;
             if (condition % 3 == 0)
@@ -211,6 +208,7 @@ function touchStarted()
         else if (mouseX > w/2-b_w/2 && mouseX < w/2+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
+            background(0);
             stop_sound();
             mode = 1;
             if (condition % 3 == 1)
@@ -228,6 +226,7 @@ function touchStarted()
         else if (mouseX > w/2+r_x-b_w/2 && mouseX < w/2+r_x+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
+            background(0);
             stop_sound();
             mode = 1;
             if (condition % 3 == 2)
@@ -250,6 +249,7 @@ function touchStarted()
         if (mouseX > w/2-b_w/2 && mouseX < w/2+b_w/2 && mouseY > h/2+2*b_y-b_h/2 && mouseY < h/2+2*b_y+b_h/2)
         {
             clear();
+            background(0);
             play_sound();
             mode = 0;
         }
@@ -375,6 +375,7 @@ function print_performance()
 function draw()
 {
     clear();
+    background(0);
     
     // show trial counter
     fill(255);
