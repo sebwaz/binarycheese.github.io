@@ -33,6 +33,7 @@ var show_scores = 0;
 
 function preload()
 {
+    createCanvas(w, h);
     textSize(48);
     text_color = color(0);
     textAlign(CENTER, CENTER);
@@ -88,7 +89,6 @@ function knuth_shuffle(arr)
 
 function setup()
 {
-    createCanvas(w, h);
     noStroke();
     
     textSize(24);
