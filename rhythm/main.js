@@ -16,18 +16,23 @@ var r_x = 200;
 var b_y = 100;
 
 // experiment params
-var condition = 15;
-var trial_num = -1;
+var condition   = 15;
+var trial_num   = -1;
 var ans_correct = 0;
-var block = [];
+var block       = [];
+var play_time   = 2000;
 
 // score counter
 var tri_counter = 0;
 var qua_counter = 0;
 var tri_correct = 0;
 var qua_correct = 0;
-
 var show_scores = 0;
+
+// interval handles (used to track intervals to close)
+var c_hand;
+var r_hand;
+var t_hand;
 
 function preload()
 {
@@ -86,29 +91,27 @@ function setup()
 }
 
 function play_sound()
-{
-    trial_num += 1;
-    if (trial_num >= 20)
-    {
-        trial_num = 0;
-        block = knuth_shuffle(block);
-    }
-    
+{ 
     condition = block[trial_num];
     switch (condition)
     {       
-        case 3:  clv.play(); break;
-        case 4:  rim.play(); break;
+        case 3:
+            c_hand = setInterval(function(){clv.play()}, 100);
+            r_hand = setInterval(function(){rim.play()}, 300);
+            break;
+        case 4: 
+            c_hand = setInterval(function(){clv.play()}, 100);
+            r_hand = setInterval(function(){rim.play()}, 400);
+            break;
     }
+    t_hand = setTimeout(function(){clearInterval(c_hand); clearInterval(r_hand);}, play_time);
 }
 
 function stop_sound()
 {
-    switch (condition)
-    {
-        case 3:  clv.stop(); tri_counter += 1; break;
-        case 4:  rim.stop(); qua_counter += 1; break;
-    }
+    clearInterval(c_hand);
+    clearInterval(r_hand);
+    clearInterval(t_hand);
 }
 
 function touchStarted()
@@ -160,13 +163,23 @@ function touchStarted()
     // display correctness, click to play next
     else if (mode == 1)
     {
+        // play next
         if (mouseX > w/2-b_w/2 && mouseX < w/2+b_w/2 && mouseY > h/2+2*b_y-b_h/2 && mouseY < h/2+2*b_y+b_h/2)
         {
+            // increment trial num
+            trial_num += 1;
+            if (trial_num >= 20)
+            {
+                trial_num = 0;
+                block = knuth_shuffle(block);
+            }
+            // play sound
             clear();
             background(0);
             play_sound();
             mode = 0;
         }
+        // display score switch
         else if (mouseX > w/2-b_w/2 && mouseX < w/2+b_w/2 && mouseY > 190 && mouseY < 210)
         {
             show_scores = show_scores == 1 ? 0 : 1;
