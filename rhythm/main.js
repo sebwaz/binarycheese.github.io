@@ -20,8 +20,14 @@ var condition   = 15;
 var trial_num   = -1;
 var ans_correct = 0;
 var block       = [];
-var play_time   = 2000;
-
+var stim_time   = 1800;
+var wait_time   = 240;
+var play_time   = 2*stim_time + wait_time;
+var fund_bpm    = 200;
+var fund_ms     = 1000/(fund_bpm/60);
+var max_bpm = 360;
+var min_bpm = 160;
+    
 // score counter
 var tri_counter = 0;
 var qua_counter = 0;
@@ -30,9 +36,13 @@ var qua_correct = 0;
 var show_scores = 0;
 
 // interval handles (used to track intervals to close)
-var c_hand;
-var r_hand;
-var t_hand;
+var cf_hand;
+var rf_hand;
+var tf_hand;
+var w_hand;
+var cs_hand;
+var rs_hand;
+var ts_hand;
 
 function preload()
 {
@@ -48,7 +58,7 @@ function knuth_shuffle(arr)
 {
     for (trial = 0; trial < 20; trial++)
     {
-        arr[trial] = 3+(trial%2);
+        arr[trial] = trial%4;
     }
     
     var cur_index = arr.length, temp_val, rand_index;
@@ -95,23 +105,51 @@ function play_sound()
     condition = block[trial_num];
     switch (condition)
     {       
-        case 3:
-            c_hand = setInterval(function(){clv.play()}, 100);
-            r_hand = setInterval(function(){rim.play()}, 300);
+        case 0:
+            cf_hand = setInterval(function(){clv.play()}, fund_ms/3);
+            rf_hand = setInterval(function(){rim.play()}, fund_ms);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            w_hand  = setTimeout(function(){
+                cs_hand = setInterval(function(){clv.play()}, fund_ms/4);
+                rs_hand = setInterval(function(){rim.play()}, fund_ms);}, stim_time+wait_time);
             break;
-        case 4: 
-            c_hand = setInterval(function(){clv.play()}, 100);
-            r_hand = setInterval(function(){rim.play()}, 400);
+        case 1: 
+            cf_hand = setInterval(function(){clv.play()}, fund_ms/4);
+            rf_hand = setInterval(function(){rim.play()}, fund_ms);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            w_hand  = setTimeout(function(){
+                cs_hand = setInterval(function(){clv.play()}, fund_ms/3);
+                rs_hand = setInterval(function(){rim.play()}, fund_ms);}, stim_time+wait_time);
+            break;
+        case 2:
+            cf_hand = setInterval(function(){clv.play()}, fund_ms/3);
+            rf_hand = setInterval(function(){rim.play()}, fund_ms);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            w_hand  = setTimeout(function(){
+                cs_hand = setInterval(function(){clv.play()}, fund_ms/3);
+                rs_hand = setInterval(function(){rim.play()}, fund_ms*4/3);}, stim_time+wait_time);
+            break;
+        case 3: 
+            cf_hand = setInterval(function(){clv.play()}, fund_ms/4);
+            rf_hand = setInterval(function(){rim.play()}, fund_ms);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            w_hand  = setTimeout(function(){
+                cs_hand = setInterval(function(){clv.play()}, fund_ms/4);
+                rs_hand = setInterval(function(){rim.play()}, fund_ms*3/4);}, stim_time+wait_time);
             break;
     }
-    t_hand = setTimeout(function(){clearInterval(c_hand); clearInterval(r_hand);}, play_time);
+    ts_hand = setTimeout(function(){clearInterval(cs_hand); clearInterval(rs_hand);}, play_time);
 }
 
 function stop_sound()
 {
-    clearInterval(c_hand);
-    clearInterval(r_hand);
-    clearInterval(t_hand);
+    clearInterval(cf_hand);
+    clearInterval(rf_hand);
+    clearInterval(tf_hand);
+    clearInterval(w_hand);
+    clearInterval(cs_hand);
+    clearInterval(rs_hand);
+    clearInterval(ts_hand);
 }
 
 function touchStarted()
@@ -126,7 +164,7 @@ function touchStarted()
             background(0);
             stop_sound();
             mode = 1;
-            if (condition % 3 == 0)
+            if (condition % 2 == 0)
             {
                 tri_correct += 1;
                 right_sound.play();
@@ -146,7 +184,7 @@ function touchStarted()
             background(0);
             stop_sound();
             mode = 1;
-            if (condition % 3 == 1)
+            if (condition % 2 == 1)
             {
                 qua_correct += 1;
                 right_sound.play();
@@ -173,9 +211,12 @@ function touchStarted()
                 trial_num = 0;
                 block = knuth_shuffle(block);
             }
-            // play sound
+            // reset screen and play sound
             clear();
             background(0);
+            // randomly select new fundamental bpm
+            fund_bpm = Math.floor(Math.random()*(max_bpm-min_bpm))+min_bpm;
+            fund_ms  = 1000/(fund_bpm/60);
             play_sound();
             mode = 0;
         }
@@ -257,10 +298,10 @@ function print_performance()
         }
         text("correct answer:", w/2, h/2-1.5*b_y);
         textSize(72);
-        switch (condition % 3)
+        switch (condition % 2)
         {
-            case 0: text("3:1", w/2, h/2-b_y); break;
-            case 1: text("4:1", w/2, h/2-b_y); break;
+            case 0: text("FIRST",  w/2, h/2-b_y); break;
+            case 1: text("SECOND", w/2, h/2-b_y); break;
         }
         textSize(24);
     }
@@ -331,13 +372,13 @@ function draw()
         fill(l_color);
         quad(w/2+l_x-b_w/2,h/2+b_y+b_h/2, w/2+l_x+b_w/2,h/2+b_y+b_h/2, w/2+l_x+b_w/2,h/2+b_y-b_h/2, w/2+l_x-b_w/2,h/2+b_y-b_h/2);
         fill(text_color);
-        text("3:1", w/2+l_x, h/2+b_y);
+        text("first", w/2+l_x, h/2+b_y);
         
         // right button
         fill(r_color);
         quad(w/2+r_x-b_w/2,h/2+b_y+b_h/2, w/2+r_x+b_w/2,h/2+b_y+b_h/2, w/2+r_x+b_w/2,h/2+b_y-b_h/2, w/2+r_x-b_w/2,h/2+b_y-b_h/2);
         fill(text_color);
-        text("4:1", w/2+r_x, h/2+b_y);
+        text("second", w/2+r_x, h/2+b_y);
     }
     else if (mode == 1)
     {
