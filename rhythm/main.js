@@ -29,10 +29,10 @@ var max_bpm = 360;
 var min_bpm = 160;
     
 // score counter
-var tri_counter = 0;
-var qua_counter = 0;
-var tri_correct = 0;
-var qua_correct = 0;
+var SN_counter = 0;
+var NS_counter = 0;
+var SN_correct = 0;
+var NS_correct = 0;
 var show_scores = 0;
 
 // interval handles (used to track intervals to close)
@@ -43,6 +43,14 @@ var w_hand;
 var cs_hand;
 var rs_hand;
 var ts_hand;
+var playing = 0;
+
+// SDT vals
+var PcSN;
+var PcNS;
+var dFC;
+var lamFC;
+var logBFC;
 
 function preload()
 {
@@ -100,45 +108,56 @@ function setup()
     block = knuth_shuffle(block);
 }
 
+// TODO: randomize tempo difference between the stimuli
+// thus, neither clav nor rim keeps the same Hz
 function play_sound()
 { 
+    playing = 1;
     condition = block[trial_num];
     switch (condition)
     {       
         case 0:
+            SN_counter += 1;
             cf_hand = setInterval(function(){clv.play()}, fund_ms/3);
             rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
+                playing = 2;
                 cs_hand = setInterval(function(){clv.play()}, fund_ms/4);
                 rs_hand = setInterval(function(){rim.play()}, fund_ms);}, stim_time+wait_time);
             break;
-        case 1: 
+        case 1:
+            NS_counter += 1;
             cf_hand = setInterval(function(){clv.play()}, fund_ms/4);
             rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
+                playing = 2;
                 cs_hand = setInterval(function(){clv.play()}, fund_ms/3);
                 rs_hand = setInterval(function(){rim.play()}, fund_ms);}, stim_time+wait_time);
             break;
         case 2:
+            SN_counter += 1;
             cf_hand = setInterval(function(){clv.play()}, fund_ms/3);
             rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
+                playing = 2;
                 cs_hand = setInterval(function(){clv.play()}, fund_ms/3);
                 rs_hand = setInterval(function(){rim.play()}, fund_ms*4/3);}, stim_time+wait_time);
             break;
-        case 3: 
+        case 3:
+            NS_counter += 1;
             cf_hand = setInterval(function(){clv.play()}, fund_ms/4);
             rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand);}, stim_time);
+            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
+                playing = 2;
                 cs_hand = setInterval(function(){clv.play()}, fund_ms/4);
                 rs_hand = setInterval(function(){rim.play()}, fund_ms*3/4);}, stim_time+wait_time);
             break;
     }
-    ts_hand = setTimeout(function(){clearInterval(cs_hand); clearInterval(rs_hand);}, play_time);
+    ts_hand = setTimeout(function(){clearInterval(cs_hand); clearInterval(rs_hand); playing = 0;}, play_time);
 }
 
 function stop_sound()
@@ -150,6 +169,7 @@ function stop_sound()
     clearInterval(cs_hand);
     clearInterval(rs_hand);
     clearInterval(ts_hand);
+    playing = 0;
 }
 
 function touchStarted()
@@ -157,7 +177,7 @@ function touchStarted()
     // sound already played, waiting response
     if (mode == 0)
     {
-        // respond with 3:1
+        // respond with SN
         if (mouseX > w/2+l_x-b_w/2 && mouseX < w/2+l_x+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
@@ -166,7 +186,7 @@ function touchStarted()
             mode = 1;
             if (condition % 2 == 0)
             {
-                tri_correct += 1;
+                SN_correct += 1;
                 right_sound.play();
                 ans_correct = 1;
             }
@@ -177,7 +197,7 @@ function touchStarted()
             }
         }
 
-        // respond with 4:1
+        // respond with NS
         else if (mouseX > w/2+r_x-b_w/2 && mouseX < w/2+r_x+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
@@ -186,7 +206,7 @@ function touchStarted()
             mode = 1;
             if (condition % 2 == 1)
             {
-                qua_correct += 1;
+                NS_correct += 1;
                 right_sound.play();
                 ans_correct = 1;
             }
@@ -281,10 +301,10 @@ function print_performance()
 {
     
     fill(255);
-    text("3:1", w/2+l_x, h/2+b_y);
-    text("4:1", w/2+r_x, h/2+b_y);
-    text((tri_counter.toString()).concat(" trials"), w/2+l_x, h/2+(b_y/2));
-    text((qua_counter.toString()).concat(" trials"), w/2+r_x, h/2+(b_y/2));
+    text("FIRST", w/2+l_x, h/2+b_y);
+    text("SECOND", w/2+r_x, h/2+b_y);
+    text((SN_counter.toString()).concat(" trials"), w/2+l_x, h/2+(b_y/2));
+    text((NS_counter.toString()).concat(" trials"), w/2+r_x, h/2+(b_y/2));
     
     if (trial_num != -1)
     {
@@ -307,22 +327,35 @@ function print_performance()
     }
     
     fill(255);
-    if (tri_counter == 0)
+    if (SN_counter == 0)
     {
         text("-", w/2+l_x, h/2);
     }
     else
     {
-        text((((tri_correct/tri_counter*100).toFixed(2)).toString()).concat(" %"), w/2+l_x, h/2);
+        text((((SN_correct/SN_counter*100).toFixed(2)).toString()).concat(" %"), w/2+l_x, h/2);
     }
     
-    if (qua_counter == 0)
+    if (NS_counter == 0)
     {
         text("-", w/2+r_x, h/2);
     }
     else
     {
-        text((((qua_correct/qua_counter*100).toFixed(2)).toString()).concat(" %"), w/2+r_x, h/2);
+        text((((NS_correct/NS_counter*100).toFixed(2)).toString()).concat(" %"), w/2+r_x, h/2);
+    }
+    
+    // TODO: convert to yes-no analogs
+    if (SN_counter != 0 && NS_counter != 0)
+    {
+        PcSN   = SN_correct/SN_counter;
+        PcNS   = NS_correct/NS_counter;
+        dFC    = qnorm(PcSN)+qnorm(PcNS);
+        lamFC  = 1/2*(qnorm(PcNS)-qnorm(PcSN));
+        logBFC = 1/2*(pow(qnorm(PcNS),2)-pow(qnorm(PcSN),2)); 
+        text(("d'FC = ").concat((dFC.toFixed(2)).toString()), w/2, h/2);
+        text(("lamFC = ").concat((lamFC.toFixed(2)).toString()), w/2, h/2+(b_y/2));
+        text(("logBFC = ").concat((logBFC.toFixed(2)).toString()), w/2, h/2+b_y);
     }
 }
 
@@ -334,34 +367,18 @@ function draw()
     // show trial counter
     fill(255);
     textSize(20);
-    text(("Trials: ").concat((tri_counter+qua_counter).toString()), w/2, h/2-2*b_y)
+    text("Which sequence is a 3:1 rhythm?", w/2, h/2-2*b_y-28)
+    textStyle(BOLD);
+    text(("Trials: ").concat((SN_counter+NS_counter).toString()), w/2, h/2-2*b_y)
+    textStyle(NORMAL);
     textSize(24);
     
     // show playing symbol while sound is still active
-    /*
-    switch (condition)
+    switch (playing)
     {
-        case 0:  if (dup_a.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 1:  if (tri_a.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 2:  if (qua_a.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-            
-        case 3:  if (dup_b.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 4:  if (tri_b.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 5:  if (qua_b.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-            
-        case 6:  if (dup_c.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 7:  if (tri_c.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 8:  if (qua_c.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-            
-        case 9:  if (dup_d.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 10: if (tri_d.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 11: if (qua_d.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-            
-        case 12: if (dup_e.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 13: if (tri_e.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
-        case 14: if (qua_e.isPlaying()){ image(play_img, w/2, h/2-100, 128, 128); } break;
+        case 1:  image(play_img, w/2+l_x, h/2-50, 128, 128); break;
+        case 2:  image(play_img, w/2+r_x, h/2-50, 128, 128); break;
     }
-    */
     
     // sound already played, waiting response
     if (mode == 0)
