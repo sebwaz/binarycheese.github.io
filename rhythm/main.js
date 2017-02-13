@@ -5,7 +5,7 @@ var w = 850;
 var h = 480;
 
 // wav volumes
-var wav_vol = 0.1;
+var wav_vol = 0.5;
 
 // button params
 var b_w = 130;
@@ -14,26 +14,37 @@ var b_h = 80;
 var l_x = -200;
 var r_x = 200;
 var b_y = 100;
+var t_y = 80;
 
 // experiment params
-var condition   = 15;
+var condition   = -1;
 var trial_num   = -1;
 var ans_correct = 0;
 var block       = [];
 var stim_time   = 1800;
 var wait_time   = 240;
 var play_time   = 2*stim_time + wait_time;
-var fund_bpm    = 200;
-var fund_ms     = 1000/(fund_bpm/60);
-var max_bpm = 360;
-var min_bpm = 160;
+
+var fund_bpm_one = 200;
+var fund_bpm_two = 200;
+var fund_s_one  = 1/(fund_bpm_one/60);
+var fund_s_two  = 1/(fund_bpm_two/60);
+var max_bpm_l = 199;
+var min_bpm_l = 100;
+var max_bpm_h = 2*max_bpm_l;
+var min_bpm_h = 2*min_bpm_l;
     
 // score counter
-var SN_counter = 0;
-var NS_counter = 0;
-var SN_correct = 0;
-var NS_correct = 0;
+var same_lo_counter = 0;
+var diff_lo_counter = 0;
+var same_hi_counter = 0;
+var diff_hi_counter = 0;
+var same_lo_correct = 0;
+var diff_lo_correct = 0;
+var same_hi_correct = 0;
+var diff_hi_correct = 0;
 var show_scores = 0;
+var ans_text;
 
 // interval handles (used to track intervals to close)
 var cf_hand;
@@ -46,11 +57,14 @@ var ts_hand;
 var playing = 0;
 
 // SDT vals
-var PcSN;
-var PcNS;
-var dFC;
-var lamFC;
-var logBFC;
+var Pc_hi;
+var Pc_lo;
+var dP_hi;
+var dP_lo;
+var Csd_hi;
+var Csd_lo;
+var LR_hi;
+var LR_lo;
 
 function preload()
 {
@@ -58,15 +72,14 @@ function preload()
     rim = loadSound('samples/rimshot.mp3');
     right_sound = loadSound('samples/right.mp3');
     wrong_sound = loadSound('samples/wrong.mp3');
-    
     play_img = loadImage('img/playing.jpg');
 }
 
 function knuth_shuffle(arr)
 {
-    for (trial = 0; trial < 20; trial++)
+    for (trial = 0; trial < 32; trial++)
     {
-        arr[trial] = trial%4;
+        arr[trial] = trial % 8;
     }
     
     var cur_index = arr.length, temp_val, rand_index;
@@ -108,60 +121,136 @@ function setup()
     block = knuth_shuffle(block);
 }
 
-// TODO: randomize tempo difference between the stimuli
-// thus, neither clav nor rim keeps the same Hz
 function play_sound()
 { 
     playing = 1;
     condition = block[trial_num];
+    
+    // randomly select new fundamental bpm
+    fund_bpm_one = Math.floor(Math.random()*(max_bpm_l-min_bpm_l))+min_bpm_l;
+    fund_bpm_two = Math.floor(Math.random()*(max_bpm_l-min_bpm_l))+min_bpm_l;
+    // double tempo for high conditions
+    if (condition % 2 == 1)
+    {
+        fund_bpm_one *= 2;
+        fund_bpm_two *= 2;
+    }
+    fund_s_one = 1/(fund_bpm_one/60);
+    fund_s_two = 1/(fund_bpm_two/60);
+    
     switch (condition)
-    {       
+    {   
+        // Low 33
         case 0:
-            SN_counter += 1;
-            cf_hand = setInterval(function(){clv.play()}, fund_ms/3);
-            rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
+            same_lo_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/3);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
                 playing = 2;
-                cs_hand = setInterval(function(){clv.play()}, fund_ms/4);
-                rs_hand = setInterval(function(){rim.play()}, fund_ms);}, stim_time+wait_time);
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/3);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
             break;
+            
+        // High 33
         case 1:
-            NS_counter += 1;
-            cf_hand = setInterval(function(){clv.play()}, fund_ms/4);
-            rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
+            same_hi_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/3);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
                 playing = 2;
-                cs_hand = setInterval(function(){clv.play()}, fund_ms/3);
-                rs_hand = setInterval(function(){rim.play()}, fund_ms);}, stim_time+wait_time);
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/3);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
             break;
+            
+        // Low 44
         case 2:
-            SN_counter += 1;
-            cf_hand = setInterval(function(){clv.play()}, fund_ms/3);
-            rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
+            same_lo_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/4);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
                 playing = 2;
-                cs_hand = setInterval(function(){clv.play()}, fund_ms/3);
-                rs_hand = setInterval(function(){rim.play()}, fund_ms*4/3);}, stim_time+wait_time);
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/4);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
             break;
+            
+        // High 44
         case 3:
-            NS_counter += 1;
-            cf_hand = setInterval(function(){clv.play()}, fund_ms/4);
-            rf_hand = setInterval(function(){rim.play()}, fund_ms);
-            tf_hand = setTimeout(function(){clearInterval(cf_hand); clearInterval(rf_hand); playing = 0;}, stim_time);
+            same_hi_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/4);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
             w_hand  = setTimeout(function(){
                 playing = 2;
-                cs_hand = setInterval(function(){clv.play()}, fund_ms/4);
-                rs_hand = setInterval(function(){rim.play()}, fund_ms*3/4);}, stim_time+wait_time);
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/4);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
+            break;
+            
+        // Low 34
+        case 4:
+            diff_lo_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/3);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
+            w_hand  = setTimeout(function(){
+                playing = 2;
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/4);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
+            break;
+            
+        // High 34
+        case 5:
+            diff_hi_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/3);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
+            w_hand  = setTimeout(function(){
+                playing = 2;
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/4);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
+            break;
+            
+        // Low 43
+        case 6:
+            diff_lo_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/4);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
+            w_hand  = setTimeout(function(){
+                playing = 2;
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/3);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
+            break;
+            
+        // High 43
+        case 7:
+            diff_hi_counter += 1;
+            clv.loop(0, 1, wav_vol, 0, fund_s_one/4);
+            rim.loop(0, 1, wav_vol, 0, fund_s_one);
+            tf_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, stim_time);
+            w_hand  = setTimeout(function(){
+                playing = 2;
+                clv.loop(0, 1, wav_vol, 0, fund_s_two/3);
+                rim.loop(0, 1, wav_vol, 0, fund_s_two);},
+                stim_time+wait_time);
             break;
     }
-    ts_hand = setTimeout(function(){clearInterval(cs_hand); clearInterval(rs_hand); playing = 0;}, play_time);
+    ts_hand = setTimeout(function(){clv.stop(); rim.stop(); playing = 0;}, play_time);
 }
 
 function stop_sound()
 {
+    clv.stop();
+    rim.stop();
     clearInterval(cf_hand);
     clearInterval(rf_hand);
     clearInterval(tf_hand);
@@ -177,16 +266,17 @@ function touchStarted()
     // sound already played, waiting response
     if (mode == 0)
     {
-        // respond with SN
+        // respond with same
         if (mouseX > w/2+l_x-b_w/2 && mouseX < w/2+l_x+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
             background(0);
             stop_sound();
             mode = 1;
-            if (condition % 2 == 0)
+            if (condition < 4)
             {
-                SN_correct += 1;
+                if(condition % 2 == 0) {same_lo_correct += 1;}
+                else                   {same_hi_correct += 1;}
                 right_sound.play();
                 ans_correct = 1;
             }
@@ -197,16 +287,17 @@ function touchStarted()
             }
         }
 
-        // respond with NS
+        // respond with diff
         else if (mouseX > w/2+r_x-b_w/2 && mouseX < w/2+r_x+b_w/2 && mouseY > h/2+b_y-b_h/2 && mouseY < h/2+b_y+b_h/2)
         {
             clear();
             background(0);
             stop_sound();
             mode = 1;
-            if (condition % 2 == 1)
+            if (condition >= 4)
             {
-                NS_correct += 1;
+                if(condition % 2 == 0) {diff_lo_correct += 1;}
+                else                   {diff_hi_correct += 1;}
                 right_sound.play();
                 ans_correct = 1;
             }
@@ -218,7 +309,7 @@ function touchStarted()
         }
     }
     
-    // display correctness, click to play next
+    // displaying correctness, click to play next
     else if (mode == 1)
     {
         // play next
@@ -226,7 +317,7 @@ function touchStarted()
         {
             // increment trial num
             trial_num += 1;
-            if (trial_num >= 20)
+            if (trial_num >= 32)
             {
                 trial_num = 0;
                 block = knuth_shuffle(block);
@@ -234,9 +325,6 @@ function touchStarted()
             // reset screen and play sound
             clear();
             background(0);
-            // randomly select new fundamental bpm
-            fund_bpm = Math.floor(Math.random()*(max_bpm-min_bpm))+min_bpm;
-            fund_ms  = 1000/(fund_bpm/60);
             play_sound();
             mode = 0;
         }
@@ -299,12 +387,9 @@ function highlight()
 
 function print_performance()
 {
-    
     fill(255);
-    text("FIRST", w/2+l_x, h/2+b_y);
-    text("SECOND", w/2+r_x, h/2+b_y);
-    text((SN_counter.toString()).concat(" trials"), w/2+l_x, h/2+(b_y/2));
-    text((NS_counter.toString()).concat(" trials"), w/2+r_x, h/2+(b_y/2));
+    text("LOW",  w/2+l_x, h/2);
+    text("HIGH", w/2+r_x, h/2);
     
     if (trial_num != -1)
     {
@@ -318,44 +403,80 @@ function print_performance()
         }
         text("correct answer:", w/2, h/2-1.5*b_y);
         textSize(72);
-        switch (condition % 2)
+        switch (condition)
         {
-            case 0: text("FIRST",  w/2, h/2-b_y); break;
-            case 1: text("SECOND", w/2, h/2-b_y); break;
+            case 0:
+            case 1:
+                ans_text = " (3:1, 3:1)"; break;
+            case 2:
+            case 3:
+                ans_text = " (4:1, 4:1)"; break;
+            case 4:
+            case 5:
+                ans_text = " (3:1, 4:1)"; break;
+            case 6:
+            case 7:
+                ans_text = " (4:1, 3:1)"; break;
         }
+        if (condition < 4) {text("SAME".concat(ans_text), w/2, h/2-b_y);}
+        else               {text("DIFF".concat(ans_text), w/2, h/2-b_y);}
         textSize(24);
     }
     
     fill(255);
-    if (SN_counter == 0)
+    //lo counter
+    var t_correct = (same_lo_correct+diff_lo_correct).toString();
+    var t_trials  = (same_lo_counter+diff_lo_counter).toString();
+    text(t_correct.concat(" / ", t_trials, " trials correct"), w/2+l_x, h/2+t_y/2);
+    
+    //hi counter
+    var t_correct = (same_hi_correct+diff_hi_correct).toString();
+    var t_trials  = (same_hi_counter+diff_hi_counter).toString();
+    text(t_correct.concat(" / ", t_trials, " trials correct"), w/2+r_x, h/2+t_y/2);
+    
+    // for Same Diff SDT calculations
+    if (same_lo_counter != 0 && diff_lo_counter != 0)
     {
-        text("-", w/2+l_x, h/2);
-    }
-    else
-    {
-        text((((SN_correct/SN_counter*100).toFixed(2)).toString()).concat(" %"), w/2+l_x, h/2);
+        //z(respond diff to diff)
+        var zH_lo = zfromp(diff_lo_correct/diff_lo_counter);
+        //z(respond diff to same)
+        var zF_lo = zfromp((same_lo_counter-same_lo_correct)/same_lo_counter);
+        //prob/proportion correct
+        Pc_lo = pfromz((zH_lo-zF_lo)/2);
+        //sesitivity
+        dP_lo = 2*zfromp(0.5*(1+Math.sqrt(2*Pc_lo-1)));
+        //criterion location
+        Csd_lo = -Math.sqrt(2)*zfromp((same_lo_counter-same_lo_correct)/(same_lo_counter*2))-(dP_lo/2);
+        //likelihood ratio
+        LR_lo = 0.5*(exp(dP_lo*Csd_lo)+exp(-dP_lo*(Csd_lo-1)));
+        
+        //print sensitivity
+        text("d' = ".concat(dP_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y);
+        //print criterion
+        text("C = ".concat(Csd_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y*3/2);
+        text("LR = ".concat(LR_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y*2);
     }
     
-    if (NS_counter == 0)
+    if (same_hi_counter != 0 && diff_hi_counter != 0)
     {
-        text("-", w/2+r_x, h/2);
-    }
-    else
-    {
-        text((((NS_correct/NS_counter*100).toFixed(2)).toString()).concat(" %"), w/2+r_x, h/2);
-    }
-    
-    // TODO: convert to yes-no analogs
-    if (SN_counter != 0 && NS_counter != 0)
-    {
-        PcSN   = SN_correct/SN_counter;
-        PcNS   = NS_correct/NS_counter;
-        dFC    = qnorm(PcSN)+qnorm(PcNS);
-        lamFC  = 1/2*(qnorm(PcNS)-qnorm(PcSN));
-        logBFC = 1/2*(pow(qnorm(PcNS),2)-pow(qnorm(PcSN),2)); 
-        text(("d'FC = ").concat((dFC.toFixed(2)).toString()), w/2, h/2);
-        text(("lamFC = ").concat((lamFC.toFixed(2)).toString()), w/2, h/2+(b_y/2));
-        text(("logBFC = ").concat((logBFC.toFixed(2)).toString()), w/2, h/2+b_y);
+        //z(respond diff to diff)
+        var zH_hi = zfromp(diff_hi_correct/diff_hi_counter);
+        //z(respond diff to same)
+        var zF_hi = zfromp((same_hi_counter-same_hi_correct)/same_hi_counter);
+        //prob/proportion correct
+        Pc_hi = pfromz((zH_hi-zF_hi)/2);
+        //sesitivity
+        dP_hi = 2*zfromp(0.5*(1+Math.sqrt(2*Pc_hi-1)));
+        //criterion location
+        Csd_hi = -Math.sqrt(2)*zfromp((same_hi_counter-same_hi_correct)/(same_hi_counter*2))-(dP_hi/2);
+        //likelihood ratio
+        LR_hi = 0.5*(exp(dP_hi*Csd_hi)+exp(-dP_hi*(Csd_hi-1)));
+        
+        //print sensitivity
+        text("d' = ".concat(dP_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y);
+        //print criterion
+        text("C = ".concat(Csd_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y*3/2);
+        text("LR = ".concat(LR_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y*2);
     }
 }
 
@@ -367,17 +488,17 @@ function draw()
     // show trial counter
     fill(255);
     textSize(20);
-    text("Which sequence is a 3:1 rhythm?", w/2, h/2-2*b_y-28)
+    text("Are the rhythms the same?", w/2, h/2-2*b_y-28)
     textStyle(BOLD);
-    text(("Trials: ").concat((SN_counter+NS_counter).toString()), w/2, h/2-2*b_y)
+    text(("Trials: ").concat((same_lo_counter+diff_lo_counter+same_hi_counter+diff_hi_counter).toString()), w/2, h/2-2*b_y)
     textStyle(NORMAL);
     textSize(24);
     
     // show playing symbol while sound is still active
     switch (playing)
     {
-        case 1:  image(play_img, w/2+l_x, h/2-50, 128, 128); break;
-        case 2:  image(play_img, w/2+r_x, h/2-50, 128, 128); break;
+        case 1:  image(play_img, w/2, h/2-25, 128, 128); break;
+        case 2:  image(play_img, w/2, h/2+25, 128, 128); break;
     }
     
     // sound already played, waiting response
@@ -389,13 +510,13 @@ function draw()
         fill(l_color);
         quad(w/2+l_x-b_w/2,h/2+b_y+b_h/2, w/2+l_x+b_w/2,h/2+b_y+b_h/2, w/2+l_x+b_w/2,h/2+b_y-b_h/2, w/2+l_x-b_w/2,h/2+b_y-b_h/2);
         fill(text_color);
-        text("first", w/2+l_x, h/2+b_y);
+        text("SAME", w/2+l_x, h/2+b_y);
         
         // right button
         fill(r_color);
         quad(w/2+r_x-b_w/2,h/2+b_y+b_h/2, w/2+r_x+b_w/2,h/2+b_y+b_h/2, w/2+r_x+b_w/2,h/2+b_y-b_h/2, w/2+r_x-b_w/2,h/2+b_y-b_h/2);
         fill(text_color);
-        text("second", w/2+r_x, h/2+b_y);
+        text("DIFF", w/2+r_x, h/2+b_y);
     }
     else if (mode == 1)
     {
@@ -414,7 +535,9 @@ function draw()
         {
             fill(text_color);
             text("show scores", w/2, 200);
-            quad(0, h/2+(b_y/2)-75, 0, h/2+(b_y/2)+75, w, h/2+(b_y/2)+75, w, h/2+(b_y/2)-75);
+            //quad(0, h/2+(b_y/2)-75, 0, h/2+(b_y/2)+100, w, h/2+(b_y/2)+100, w, h/2+(b_y/2)-75);
+            quad(0,         h/2+(b_y/2)-75, 0,         h/2+(b_y/2)+200, w-(b_w/2), h/2+(b_y/2)+200, w-(b_w/2), h/2+(b_y/2)-75);
+            quad(w-(b_w/2), h/2+(b_y/2)-75, w-(b_w/2), h/2+(b_y/2)+200, w+(b_w/2), h/2+(b_y/2)+200, w+(b_w/2), h/2+(b_y/2)-75);
         }
         textSize(24);
         

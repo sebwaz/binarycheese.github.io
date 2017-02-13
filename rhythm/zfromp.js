@@ -14,7 +14,7 @@
   * * GNU General Public License for more details at http://www.gnu.org
   * * */
   
-var qnorm = function(p) {
+var zfromp = function(p) {
   // ALGORITHM AS 111, APPL.STATIST., VOL.26, 118-121, 1977.
   // Computes z = invNorm(p)
 
