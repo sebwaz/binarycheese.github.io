@@ -4,6 +4,10 @@
 var w = 1000;
 var h = 1000;
 var grid_s = 100;
+var IMGS;
+var BLOTS;
+var COVER;
+var PLACE;
 
 function preload()
 {
@@ -35,6 +39,35 @@ function preload()
     p4_2  = loadImage('img/blots/grid/4_2.png');
     p4_3  = loadImage('img/blots/grid/4_3.png');
     p4_4  = loadImage('img/blots/grid/4_4.png');
+    IMGS     = new Array();
+    IMGS[0]  = p0_1;
+    IMGS[1]  = p0_2;
+    IMGS[2]  = p0_3;
+    IMGS[3]  = p0_4;
+    IMGS[4]  = p1_1;
+    IMGS[5]  = p1_2;
+    IMGS[6]  = p1_3;
+    IMGS[7]  = p1_4;
+    IMGS[8]  = p2C_1;
+    IMGS[9]  = p2C_2;
+    IMGS[10] = p2C_3;
+    IMGS[11] = p2C_4;
+    IMGS[12] = p2H_1;
+    IMGS[13] = p2H_2;
+    IMGS[14] = p2H_3;
+    IMGS[15] = p2H_4;
+    IMGS[16] = p2I_1;
+    IMGS[17] = p2I_2;
+    IMGS[18] = p2I_3;
+    IMGS[19] = p2I_4;
+    IMGS[20] = p3_1;
+    IMGS[21] = p3_2;
+    IMGS[22] = p3_3;
+    IMGS[23] = p3_4;
+    IMGS[24] = p4_1;
+    IMGS[25] = p4_2;
+    IMGS[26] = p4_3;
+    IMGS[27] = p4_4;
 }
 
 // USED TO PLACE IMAGES ON CANVAS
@@ -113,9 +146,11 @@ function blot(img, mir, rot, T, B, L, R)
 }
 
 // OBJECT THAT HOLDS COVERAGE/EDGE TYPES IN GRID (used in COVER[])
-function coverage(cov, T, B, L, R)
+function coverage(cov, x_i, y_i, T, B, L, R)
 {
-    this.coverage = cov; 
+    this.coverage = cov;
+    this.x        = x_i;
+    this.y        = y_i;
     this.top      = T;
     this.bottom   = B;
     this.left     = L;
@@ -123,43 +158,238 @@ function coverage(cov, T, B, L, R)
 }
 
 // OBJECT THAT HOLDS ATTRIBUTES OF ACTUAL PLACED BLOT (used in PLACE[])
-function placement(add, img_index, x_i, y_i, blot_s, R)
+function placement(rot_i, type_i, ver_i, x_i, y_i, blot_s)
 {
-    this.used      = add;       // indicates whether the object is being used for plotted blot (since PLACE[] is pre-allocated to max)
-    this.blot      = img_index; // reference to IMGS[] so that proper img, rotation, mirroring, can be used
-    this.x_index   = x_i;       // x index of anchor point (top left)
-    this.y_index   = y_i;       // y index of anchor point (top left)
-    this.blot_size = blot_s;    // 0, 1, or 2. indicates 1x1 or 2x2. 0 for uninitialized 
+    this.rot_index  = rot_i;  // references to IMGS[rot][type][ver]
+    this.type_index = type_i; 
+    this.ver_index  = ver_i;
+    this.x_index    = x_i;    // x index of anchor point (top left)
+    this.y_index    = y_i;    // y index of anchor point (top left)
+    this.blot_size  = blot_s; // 0, 1, or 2. indicates 1x1 or 2x2. 0 for uninitialized 
 }
 
+// get a random integer between two values, inclusive
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// function for deciding what blots are plotted where
+function generate()
+{
+    // pick random number of 2x2 blots: [0, 10]
+    var num_2x2 = getRandomIntInclusive(0, 10);
+    
+    for (var i = 0; i < num_2x2; i++)
+    {
+        // make list of possible anchor points
+        var list_open = [];
+        
+        for (var j = 0; j < 5-1; j++)
+        {
+            for (var k = 0; k < 10-1; k++)
+            {
+                if (!COVER[j][k].coverage && !COVER[j+1][k].coverage && !COVER[j][k+1].coverage && !COVER[j+1][k+1].coverage)
+                {
+                    list_open[list_open.length] = COVER[j][k];
+                }
+            }
+        }
+        
+        // if list is empty, break out of loop
+        if (list_open.length == 0)
+        {
+            break;
+        }
+        // else add the 2x2s to the place buffer, update coverage accordingly
+        else
+        {
+            // pick random point from list
+            var chosen = getRandomIntInclusive(0, list_open.length-1);
+            
+            // pick random blot from entire set BLOT[]
+            var r_rot  = getRandomIntInclusive(0, 3);
+            var r_type = getRandomIntInclusive(0, 6);
+            var r_ver  = getRandomIntInclusive(0, 7);
+            
+            // add selection to PLACE[]
+            PLACE[PLACE.length] = new placement(r_rot, r_type, r_ver, list_open[chosen].x, list_open[chosen].y, 2);
+            // update COVER[] accordingly (double check all adjacent edges)
+            for (var j = 0; j < 4; j++)
+            {
+                // mark as covered
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].coverage = true;
+                 
+                // mark edges of all squares  under 2x2 in the same way
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].top      = list_open[chosen].top;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].bottom   = list_open[chosen].bottom;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].left     = list_open[chosen].left;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].right    = list_open[chosen].right;
+            }
+            
+            // update 8 adjacent sides accordingly
+            if (list_open[chosen].y>0)
+            {
+                COVER[list_open[chosen].x  ][list_open[chosen].y-1].bottom = list_open[chosen].top;
+                COVER[list_open[chosen].x+1][list_open[chosen].y-1].bottom = list_open[chosen].top;
+            }
+            if (list_open[chosen].y<8)
+            {
+                COVER[list_open[chosen].x  ][list_open[chosen].y+2].top = list_open[chosen].bottom;
+                COVER[list_open[chosen].x+1][list_open[chosen].y+2].top = list_open[chosen].bottom;
+            }
+            if (list_open[chosen].x>0)
+            {
+                COVER[list_open[chosen].x-1][list_open[chosen].y  ].right = list_open[chosen].left;
+                COVER[list_open[chosen].x-1][list_open[chosen].y+1].right = list_open[chosen].leftt;
+            }
+            if (list_open[chosen].x<3)
+            {
+                COVER[list_open[chosen].x+2][list_open[chosen].y  ].left = list_open[chosen].right;
+                COVER[list_open[chosen].x+2][list_open[chosen].y+1].left = list_open[chosen].right;
+            }
+        }
+    }
+    
+    // generate list of remaining spaces in COVER[]
+    // for # of placements left:
+        // choose element from above list randomly
+        // pop/remove the chosen element from the list
+        // create list of blots that work by checking neighbor requirements of space
+        // randomly pick a blot from above list
+        // add in PLACE[]
+        // update COVER[] accordingly
+}
+
+// initialize major data tables
 function setup()
 {
     createCanvas(w, h);
     background(255);
     noStroke();
+    
+    //////////////////
+    // set up BLOTS //
+    //////////////////
+    BLOTS = new Array(4);
+    for (var i = 0; i < 4; i++)
+    {
+        BLOTS[i] = new Array(8);
+        for (var j = 0; j < 8; j++)
+        {
+            BLOTS[i][j] = new Array(7);
+        }
+    }
+    
+    // enter standard blots (no rotation, no mirror)
+    for (var i = 0; i < IMGS.length; i++)
+    {
+        // type 0
+        if (i < 4)
+        {
+            BLOTS[0][(i-(i%4))/4][i%4] = new blot(IMGS[i], false, 0, 'w', 'w', 'w', 'w');
+        }
+        
+        // type 1
+        else if (i < 8)
+        {
+            BLOTS[0][(i-(i%4))/4][i%4] = new blot(IMGS[i], false, 0, 'b', 'w', 'w', 'w');
+        }
+        
+        // type 2c
+        else if (i < 12)
+        {
+            BLOTS[0][(i-(i%4))/4][i%4] = new blot(IMGS[i], false, 0, 'b', 'w', 'w', 'b');
+        }
+        
+        // types 2h & 2i
+        else if (i < 20)
+        {
+            BLOTS[0][(i-(i%4))/4][i%4] = new blot(IMGS[i], false, 0, 'b', 'b', 'w', 'w');
+        }
+        
+        // type 3
+        else if (i < 24)
+        {
+            BLOTS[0][(i-(i%4))/4][i%4] = new blot(IMGS[i], false, 0, 'b', 'w', 'b', 'b');
+        }
+        
+        // type 4
+        else if (i < 28)
+        {
+            BLOTS[0][(i-(i%4))/4][i%4] = new blot(IMGS[i], false, 0, 'b', 'b', 'b', 'b');
+        }
+    }
+    
+    // enter mirrored standard blots (no rotation)
+    for (var i = 0; i < IMGS.length; i++)
+    {
+        var to_mirror = BLOTS[0][(i-(i%4))/4][i%4];
+        BLOTS[0][(i-(i%4))/4][(i%4)+4] = new blot(to_mirror.blot, true, 0, to_mirror.top, to_mirror.bottom, to_mirror.right, to_mirror.left);
+    }
+    
+    // enter rotated blots (mirrored and unmirrored)
+    for (var i = 0; i < 2*IMGS.length; i++)
+    {
+        var to_rotate = BLOTS[0][(i-(i%8))/8][i%8];
+        for (var j = 1; j < 4; j++)
+        {
+            switch(j)
+            {
+                case 1: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 1, to_rotate.right,  to_rotate.left,  to_rotate.top,    to_rotate.bottom); break;
+                case 2: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 2, to_rotate.bottom, to_rotate.top,   to_rotate.right,  to_rotate.left);   break;
+                case 3: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 3, to_rotate.left,   to_rotate.right, to_rotate.bottom, to_rotate.top);    break;
+            }
+        }
+    }
+    
+    //////////////////
+    // set up COVER //
+    //////////////////
+    COVER = new Array(5)
+    for (var i = 0; i < 5; i++)
+    {
+        COVER[i] = new Array(10);
+        for (var j = 0; j < 10; j++)
+        {
+            COVER[i][j] = new coverage(false, i, j, 'n', 'n', 'n', 'n');
+        }
+    }
+    
+    //////////////////
+    // set up PLACE //
+    //////////////////
+    PLACE = [];
+    
+    ///////////////////////////////
+    // GENERATE BLOT ARRANGEMENT //
+    ///////////////////////////////
+    generate();
 }
 
 function draw()
 {
     clear();
     background(255);
-    draw_img(p2C_1, false, 0, 1, 0, 0);
-    draw_img(p2C_1, false, 1, 1, 1, 0);
-    draw_img(p2C_1, false, 2, 1, 2, 0);
-    draw_img(p2C_1, false, 3, 1, 3, 0);
-    draw_img(p2C_1, true, 0, 1, 0, 1);
-    draw_img(p2C_1, true, 1, 1, 1, 1);
-    draw_img(p2C_1, true, 2, 1, 2, 1);
-    draw_img(p2C_1, true, 3, 1, 3, 1);
-    draw_img(p2C_1, false, 0, 2, 0, 2);
-    draw_img(p2C_1, false, 1, 2, 2, 2);
-    draw_img(p2C_1, false, 2, 2, 4, 2);
-    draw_img(p2C_1, false, 3, 2, 6, 2);
-    draw_img(p2C_1, true, 0, 2, 0, 4);
-    draw_img(p2C_1, true, 1, 2, 2, 4);
-    draw_img(p2C_1, true, 2, 2, 4, 4);
-    draw_img(p2C_1, true, 3, 2, 6, 4);
-
+    for (var i = 0; i < PLACE.length; i++)
+    {
+        var blot = BLOTS[PLACE[i].rot_index][PLACE[i].type_index][PLACE[i].ver_index].blot
+        var mir  = BLOTS[PLACE[i].rot_index][PLACE[i].type_index][PLACE[i].ver_index].mirror
+        var rot  = BLOTS[PLACE[i].rot_index][PLACE[i].type_index][PLACE[i].ver_index].rotation        
+        //draw_img(blot, mir, rot, PLACE[i].blot_size, PLACE[i].x_index, PLACE[i].y_index)
+    }
+    
+    draw_img(p4_4, false, 0, 1, 1, 1)
+    draw_img(p4_4, false, 1, 1, 1, 3)
+    draw_img(p4_4, false, 2, 1, 1, 5)
+    draw_img(p4_4, false, 3, 1, 1, 7)
+    
+    
+    
+    textSize(64);
+    fill(0, 102, 153);
+    text((PLACE.length).toString(), 10, h-64);
     /*
     image(p2C_1, 0, grid_s, grid_s, grid_s);
     rotate(PI/2)
