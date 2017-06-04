@@ -77,10 +77,13 @@ function draw_img(img, mir, rot, blot_size, x_index, y_index)
     var y = y_index*grid_s;
     var x_flip = -x-grid_s;
     var y_flip = -y-grid_s;
+    // 1x1 blots
     if (blot_size == 1)
     {
+        // if blot img itself is not being mirrored
         if (mir == false)
         {
+            // print base
             switch(rot)
             {
                 case 0: /*rotate(0)*/   image(img, x,      y,      grid_s, grid_s); break;
@@ -88,9 +91,25 @@ function draw_img(img, mir, rot, blot_size, x_index, y_index)
                 case 2: rotate(PI);     image(img, x_flip, y_flip, grid_s, grid_s); break;
                 case 3: rotate(3*PI/2); image(img, y_flip, x,      grid_s, grid_s); break;
             }
+            resetMatrix();
+            scale(1, 1);
+            
+            // print mirror
+            switch(rot)
+            {
+                case 0:  /*rotate(0)*/   scale (-1, 1); image(img, -(w-x),   y,        grid_s, grid_s); break;
+                case 1:  rotate(3*PI/2); scale (-1, 1); image(img, y,        w+x_flip, grid_s, grid_s); break;
+                case 2:  rotate(PI);     scale (-1, 1); image(img, w+x_flip, y_flip,   grid_s, grid_s); break;
+                case 3:  rotate(PI/2);   scale (-1, 1); image(img, y_flip,   -(w-x),   grid_s, grid_s); break;
+            }
+            resetMatrix();
+            scale(1, 1);
         }
+        
+        // else if blot img is itself mirrored
         else
         {
+            // print base
             switch(rot)
             {
                 case 0:  /*rotate(0)*/   scale (-1, 1); image(img, x_flip, y,      grid_s, grid_s); break;
@@ -98,8 +117,22 @@ function draw_img(img, mir, rot, blot_size, x_index, y_index)
                 case 2:  rotate(PI);     scale (-1, 1); image(img, x,      y_flip, grid_s, grid_s); break;
                 case 3:  rotate(3*PI/2); scale (-1, 1); image(img, y,      x,      grid_s, grid_s); break;
             }
+            resetMatrix();
+            scale(1, 1);
+            
+            // print mirrored
+            switch(rot)
+            {
+                case 0: /*rotate(0)*/   image(img, w+x_flip, y,        grid_s, grid_s); break;
+                case 1: rotate(3*PI/2); image(img, y_flip,   w+x_flip, grid_s, grid_s); break;
+                case 2: rotate(PI);     image(img, -w+x,     y_flip,   grid_s, grid_s); break;
+                case 3: rotate(PI/2);   image(img, y,        -w+x,     grid_s, grid_s); break;
+            }
+            resetMatrix();
+            scale(1, 1);
         }
     }
+    // 2x2 blots
     else if (blot_size == 2)
     {
         var blot_s = grid_s*2;
@@ -109,6 +142,7 @@ function draw_img(img, mir, rot, blot_size, x_index, y_index)
         y_flip = -y-blot_s;
         if (mir == false)
         {
+            // print base
             switch(rot)
             {
                 case 0: /*rotate(0)*/   image(img, x,      y,      blot_s, blot_s); break;
@@ -116,9 +150,23 @@ function draw_img(img, mir, rot, blot_size, x_index, y_index)
                 case 2: rotate(PI);     image(img, x_flip, y_flip, blot_s, blot_s); break;
                 case 3: rotate(3*PI/2); image(img, y_flip, x,      blot_s, blot_s); break;
             }
+            resetMatrix();
+            scale(1, 1);
+            
+            // print mirror
+            switch(rot)
+            {
+                case 0:  /*rotate(0)*/   scale (-1, 1); image(img, -(w-x),   y,        blot_s, blot_s); break;
+                case 1:  rotate(3*PI/2); scale (-1, 1); image(img, y,        w+x_flip, blot_s, blot_s); break;
+                case 2:  rotate(PI);     scale (-1, 1); image(img, w+x_flip, y_flip,   blot_s, blot_s); break;
+                case 3:  rotate(PI/2);   scale (-1, 1); image(img, y_flip,   -(w-x),   blot_s, blot_s); break;
+            }
+            resetMatrix();
+            scale(1, 1);
         }
         else
         {
+            // print base
             switch(rot)
             {
                 case 0:  /*rotate(0)*/   scale (-1, 1); image(img, x_flip, y,      blot_s, blot_s); break;
@@ -126,11 +174,21 @@ function draw_img(img, mir, rot, blot_size, x_index, y_index)
                 case 2:  rotate(PI);     scale (-1, 1); image(img, x,      y_flip, blot_s, blot_s); break;
                 case 3:  rotate(3*PI/2); scale (-1, 1); image(img, y,      x,      blot_s, blot_s); break;
             }
+            resetMatrix();
+            scale(1, 1);
+            
+             // print mirrored
+            switch(rot)
+            {
+                case 0: /*rotate(0)*/   image(img, w+x_flip, y,        blot_s, blot_s); break;
+                case 1: rotate(3*PI/2); image(img, y_flip,   w+x_flip, blot_s, blot_s); break;
+                case 2: rotate(PI);     image(img, -w+x,     y_flip,   blot_s, blot_s); break;
+                case 3: rotate(PI/2);   image(img, y,        -w+x,     blot_s, blot_s); break;
+            }
+            resetMatrix();
+            scale(1, 1);
         }
     }
-
-    resetMatrix();
-    scale(1, 1);
 }
 
 // OBJECT THAT HOLDS ATTRIBUTES OF ALL POSSIBLE BLOTS (used in IMGS[])
@@ -377,13 +435,8 @@ function draw()
         var blot = BLOTS[PLACE[i].rot_index][PLACE[i].type_index][PLACE[i].ver_index].blot
         var mir  = BLOTS[PLACE[i].rot_index][PLACE[i].type_index][PLACE[i].ver_index].mirror
         var rot  = BLOTS[PLACE[i].rot_index][PLACE[i].type_index][PLACE[i].ver_index].rotation        
-        //draw_img(blot, mir, rot, PLACE[i].blot_size, PLACE[i].x_index, PLACE[i].y_index)
+        draw_img(blot, mir, rot, PLACE[i].blot_size, PLACE[i].x_index, PLACE[i].y_index)
     }
-    
-    draw_img(p4_4, false, 0, 1, 1, 1)
-    draw_img(p4_4, false, 1, 1, 1, 3)
-    draw_img(p4_4, false, 2, 1, 1, 5)
-    draw_img(p4_4, false, 3, 1, 1, 7)
     
     
     
