@@ -8,6 +8,7 @@ var IMGS;
 var BLOTS;
 var COVER;
 var PLACE;
+var debug_text;
 
 function preload()
 {
@@ -237,13 +238,12 @@ function getRandomIntInclusive(min, max) {
 function generate()
 {
     // pick random number of 2x2 blots: [0, 10]
-    var num_2x2 = getRandomIntInclusive(0, 10);
+    var num_2x2 = 0;//getRandomIntInclusive(0, 10);
     
     for (var i = 0; i < num_2x2; i++)
     {
         // make list of possible anchor points
         var list_open = [];
-        
         for (var j = 0; j < 5-1; j++)
         {
             for (var k = 0; k < 10-1; k++)
@@ -280,44 +280,120 @@ function generate()
                 COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].coverage = true;
                  
                 // mark edges of all squares  under 2x2 in the same way
-                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].top      = list_open[chosen].top;
-                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].bottom   = list_open[chosen].bottom;
-                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].left     = list_open[chosen].left;
-                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].right    = list_open[chosen].right;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].top      = COVER[list_open[chosen].x][list_open[chosen].y].top;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].bottom   = COVER[list_open[chosen].x][list_open[chosen].y].bottom;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].left     = COVER[list_open[chosen].x][list_open[chosen].y].left;
+                COVER[list_open[chosen].x+(j%2)][list_open[chosen].y+((j-(j%2))/2)].right    = COVER[list_open[chosen].x][list_open[chosen].y].right;
             }
             
             // update 8 adjacent sides accordingly
             if (list_open[chosen].y>0)
             {
-                COVER[list_open[chosen].x  ][list_open[chosen].y-1].bottom = list_open[chosen].top;
-                COVER[list_open[chosen].x+1][list_open[chosen].y-1].bottom = list_open[chosen].top;
+                COVER[list_open[chosen].x  ][list_open[chosen].y-1].bottom = COVER[list_open[chosen].x][list_open[chosen].y].top;
+                COVER[list_open[chosen].x+1][list_open[chosen].y-1].bottom = COVER[list_open[chosen].x][list_open[chosen].y].top;
             }
             if (list_open[chosen].y<8)
             {
-                COVER[list_open[chosen].x  ][list_open[chosen].y+2].top = list_open[chosen].bottom;
-                COVER[list_open[chosen].x+1][list_open[chosen].y+2].top = list_open[chosen].bottom;
+                COVER[list_open[chosen].x  ][list_open[chosen].y+2].top = COVER[list_open[chosen].x][list_open[chosen].y].bottom;
+                COVER[list_open[chosen].x+1][list_open[chosen].y+2].top = COVER[list_open[chosen].x][list_open[chosen].y].bottom;
             }
             if (list_open[chosen].x>0)
             {
-                COVER[list_open[chosen].x-1][list_open[chosen].y  ].right = list_open[chosen].left;
-                COVER[list_open[chosen].x-1][list_open[chosen].y+1].right = list_open[chosen].leftt;
+                COVER[list_open[chosen].x-1][list_open[chosen].y  ].right = COVER[list_open[chosen].x][list_open[chosen].y].left;
+                COVER[list_open[chosen].x-1][list_open[chosen].y+1].right = COVER[list_open[chosen].x][list_open[chosen].y].left;
             }
             if (list_open[chosen].x<3)
             {
-                COVER[list_open[chosen].x+2][list_open[chosen].y  ].left = list_open[chosen].right;
-                COVER[list_open[chosen].x+2][list_open[chosen].y+1].left = list_open[chosen].right;
+                COVER[list_open[chosen].x+2][list_open[chosen].y  ].left = COVER[list_open[chosen].x][list_open[chosen].y].right;
+                COVER[list_open[chosen].x+2][list_open[chosen].y+1].left = COVER[list_open[chosen].x][list_open[chosen].y].right;
             }
         }
     }
     
     // generate list of remaining spaces in COVER[]
+    var list_open = [];   
+    for (var j = 0; j < 5; j++)
+    {
+        for (var k = 0; k < 10; k++)
+        {
+            if (!COVER[j][k].coverage)
+            {
+                list_open[list_open.length] = COVER[j][k];
+            }
+        }
+    }
     // for # of placements left:
+    for (var i = 0; list_open.length > 0; i++)
+    {
         // choose element from above list randomly
-        // pop/remove the chosen element from the list
+        var choose = getRandomIntInclusive(0, list_open.length-1);
+        
+        // get indices and values, then pop/remove the chosen element from the list
+        var x_1      = list_open[choose].x
+        var y_1      = list_open[choose].y
+        var top_1    = COVER[x_1][y_1].top
+        var bottom_1 = COVER[x_1][y_1].bottom
+        var left_1   = COVER[x_1][y_1].left
+        var right_1  = COVER[x_1][y_1].right
+        list_open.splice(choose, 1)
+        
         // create list of blots that work by checking neighbor requirements of space
+        var usable_blots = []
+        for (var t = 0; t < 4; t++)
+        {
+            for (var u = 0; u < 7; u++)
+            {
+                for (var v = 0; v < 8; v++)
+                {
+                    if ((BLOTS[t][u][v].top    == top_1    || top_1    == 'n') &&
+                        (BLOTS[t][u][v].bottom == bottom_1 || bottom_1 == 'n') &&
+                        (BLOTS[t][u][v].left   == left_1   || left_1   == 'n') &&
+                        (BLOTS[t][u][v].right  == right_1  || right_1  == 'n'))
+                    {
+                        usable_blots[usable_blots.length] = [t, u, v];
+                    }
+                }
+            }
+        }
+            
         // randomly pick a blot from above list
+        var blot_pick = getRandomIntInclusive(0, usable_blots.length-1);
+        //textSize(64);
+        //fill(0, 102, 153);
+        //text(choose.toString(), 10, h-64);
+        //debug_text = usable_blots.length;
         // add in PLACE[]
+        if (usable_blots.length > 0)
+        {
+            PLACE[PLACE.length] = new placement(usable_blots[blot_pick][0], usable_blots[blot_pick][1], usable_blots[blot_pick][2], x_1, y_1, 1);
+        }
+        //
+        
         // update COVER[] accordingly
+        COVER[x_1][y_1].coverage = true;
+        COVER[x_1][y_1].top      = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].top;
+        COVER[x_1][y_1].bottom   = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].bottom;
+        COVER[x_1][y_1].left     = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].left;
+        COVER[x_1][y_1].right    = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].right;
+        
+        // mark edges of all adjacent squares accordingly
+        if (y_1>0)
+        {
+            COVER[x_1][y_1-1].bottom = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].top;
+        }
+        if (y_1<9)
+        {
+            COVER[x_1][y_1+1].top    = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].bottom;
+        }
+        if (x_1>0)
+        {
+            COVER[x_1-1][y_1].right  = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].left;
+        }
+        if (x_1<4)
+        {
+            COVER[x_1+1][y_1].left   = BLOTS[usable_blots[blot_pick][0]][usable_blots[blot_pick][1]][usable_blots[blot_pick][2]].right;
+        }
+    }
 }
 
 // initialize major data tables
@@ -395,9 +471,9 @@ function setup()
         {
             switch(j)
             {
-                case 1: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 1, to_rotate.right,  to_rotate.left,  to_rotate.top,    to_rotate.bottom); break;
+                case 1: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 1, to_rotate.left,   to_rotate.right, to_rotate.bottom, to_rotate.top);    break;
                 case 2: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 2, to_rotate.bottom, to_rotate.top,   to_rotate.right,  to_rotate.left);   break;
-                case 3: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 3, to_rotate.left,   to_rotate.right, to_rotate.bottom, to_rotate.top);    break;
+                case 3: BLOTS[j][(i-(i%8))/8][i%8] = new blot(to_rotate.blot, to_rotate.mirror, 3, to_rotate.right,  to_rotate.left,  to_rotate.top,    to_rotate.bottom); break;
             }
         }
     }
@@ -440,9 +516,11 @@ function draw()
     
     
     
-    textSize(64);
-    fill(0, 102, 153);
-    text((PLACE.length).toString(), 10, h-64);
+    //textSize(64);
+    //fill(0, 102, 153);
+    //text(debug_text.toString(), 10, h-64);
+    
+    //draw_img(p2C_1, true, 1, 1, 0, 0);
     /*
     image(p2C_1, 0, grid_s, grid_s, grid_s);
     rotate(PI/2)
