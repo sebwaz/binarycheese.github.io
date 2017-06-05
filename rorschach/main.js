@@ -237,8 +237,11 @@ function getRandomIntInclusive(min, max) {
 // function for deciding what blots are plotted where
 function generate()
 {
+    ///////////
+    // 2 X 2 //
+    ///////////
     // pick random number of 2x2 blots: [0, 10]
-    var num_2x2 = 0;//getRandomIntInclusive(0, 10);
+    var num_2x2 = getRandomIntInclusive(0, 10);
     
     for (var i = 0; i < num_2x2; i++)
     {
@@ -248,7 +251,11 @@ function generate()
         {
             for (var k = 0; k < 10-1; k++)
             {
-                if (!COVER[j][k].coverage && !COVER[j+1][k].coverage && !COVER[j][k+1].coverage && !COVER[j+1][k+1].coverage)
+                if (!COVER[j][k].coverage && !COVER[j+1][k].coverage && !COVER[j][k+1].coverage && !COVER[j+1][k+1].coverage &&
+                    (j==0 || !COVER[j-1][k].coverage && !COVER[j-1][k+1].coverage) &&
+                    (j==3 || !COVER[j+2][k].coverage && !COVER[j+2][k+1].coverage) &&
+                    (k==0 || !COVER[j][k-1].coverage && !COVER[j+1][k-1].coverage) &&
+                    (k==8 || !COVER[j][k+2].coverage && !COVER[j+1][k+2].coverage))
                 {
                     list_open[list_open.length] = COVER[j][k];
                 }
@@ -266,7 +273,7 @@ function generate()
             // pick random point from list
             var chosen = getRandomIntInclusive(0, list_open.length-1);
             
-            // pick random blot from entire set BLOT[]
+            // pick random blot from entire set BLOTS[]
             var r_rot  = getRandomIntInclusive(0, 3);
             var r_type = getRandomIntInclusive(0, 6);
             var r_ver  = getRandomIntInclusive(0, 7);
@@ -289,27 +296,34 @@ function generate()
             // update 8 adjacent sides accordingly
             if (list_open[chosen].y>0)
             {
-                COVER[list_open[chosen].x  ][list_open[chosen].y-1].bottom = COVER[list_open[chosen].x][list_open[chosen].y].top;
-                COVER[list_open[chosen].x+1][list_open[chosen].y-1].bottom = COVER[list_open[chosen].x][list_open[chosen].y].top;
+                COVER[list_open[chosen].x  ][list_open[chosen].y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+                COVER[list_open[chosen].x+1][list_open[chosen].y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
             }
             if (list_open[chosen].y<8)
             {
-                COVER[list_open[chosen].x  ][list_open[chosen].y+2].top = COVER[list_open[chosen].x][list_open[chosen].y].bottom;
-                COVER[list_open[chosen].x+1][list_open[chosen].y+2].top = COVER[list_open[chosen].x][list_open[chosen].y].bottom;
+                COVER[list_open[chosen].x  ][list_open[chosen].y+2].top = BLOTS[r_rot][r_type][r_ver].bottom;
+                COVER[list_open[chosen].x+1][list_open[chosen].y+2].top = BLOTS[r_rot][r_type][r_ver].bottom;
             }
             if (list_open[chosen].x>0)
             {
-                COVER[list_open[chosen].x-1][list_open[chosen].y  ].right = COVER[list_open[chosen].x][list_open[chosen].y].left;
-                COVER[list_open[chosen].x-1][list_open[chosen].y+1].right = COVER[list_open[chosen].x][list_open[chosen].y].left;
+                COVER[list_open[chosen].x-1][list_open[chosen].y  ].right = BLOTS[r_rot][r_type][r_ver].left;
+                COVER[list_open[chosen].x-1][list_open[chosen].y+1].right = BLOTS[r_rot][r_type][r_ver].left;
             }
             if (list_open[chosen].x<3)
             {
-                COVER[list_open[chosen].x+2][list_open[chosen].y  ].left = COVER[list_open[chosen].x][list_open[chosen].y].right;
-                COVER[list_open[chosen].x+2][list_open[chosen].y+1].left = COVER[list_open[chosen].x][list_open[chosen].y].right;
+                COVER[list_open[chosen].x+2][list_open[chosen].y  ].left = BLOTS[r_rot][r_type][r_ver].right;
+                COVER[list_open[chosen].x+2][list_open[chosen].y+1].left = BLOTS[r_rot][r_type][r_ver].right;
             }
         }
     }
     
+    //////////////////////////////////////////////
+    // FORCE WHITE BORDER IF NOT DETERMINED YET //
+    //////////////////////////////////////////////
+    
+    ///////////
+    // 1 X 1 //
+    ///////////
     // generate list of remaining spaces in COVER[]
     var list_open = [];   
     for (var j = 0; j < 5; j++)
