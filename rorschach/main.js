@@ -74,121 +74,58 @@ function preload()
 // USED TO PLACE IMAGES ON CANVAS
 function draw_img(img, mir, rot, blot_size, x_index, y_index)
 {
-    var x = x_index*grid_s;
-    var y = y_index*grid_s;
-    var x_flip = -x-grid_s;
-    var y_flip = -y-grid_s;
-    // 1x1 blots
-    if (blot_size == 1)
+    var blot_s = grid_s*blot_size;
+    x = x_index*grid_s;
+    y = y_index*grid_s;
+    x_flip = -x-blot_s;
+    y_flip = -y-blot_s;
+    if (mir == false)
     {
-        // if blot img itself is not being mirrored
-        if (mir == false)
+        // print base
+        switch(rot)
         {
-            // print base
-            switch(rot)
-            {
-                case 0: /*rotate(0)*/   image(img, x,      y,      grid_s, grid_s); break;
-                case 1: rotate(PI/2);   image(img, y,      x_flip, grid_s, grid_s); break;
-                case 2: rotate(PI);     image(img, x_flip, y_flip, grid_s, grid_s); break;
-                case 3: rotate(3*PI/2); image(img, y_flip, x,      grid_s, grid_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
-            
-            // print mirror
-            switch(rot)
-            {
-                case 0:  /*rotate(0)*/   scale (-1, 1); image(img, -(w-x),   y,        grid_s, grid_s); break;
-                case 1:  rotate(3*PI/2); scale (-1, 1); image(img, y,        w+x_flip, grid_s, grid_s); break;
-                case 2:  rotate(PI);     scale (-1, 1); image(img, w+x_flip, y_flip,   grid_s, grid_s); break;
-                case 3:  rotate(PI/2);   scale (-1, 1); image(img, y_flip,   -(w-x),   grid_s, grid_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
+            case 0: /*rotate(0)*/   image(img, x,      y,      blot_s, blot_s); break;
+            case 1: rotate(PI/2);   image(img, y,      x_flip, blot_s, blot_s); break;
+            case 2: rotate(PI);     image(img, x_flip, y_flip, blot_s, blot_s); break;
+            case 3: rotate(3*PI/2); image(img, y_flip, x,      blot_s, blot_s); break;
         }
-        
-        // else if blot img is itself mirrored
-        else
+        resetMatrix();
+        scale(1, 1);
+
+        // print mirror
+        switch(rot)
         {
-            // print base
-            switch(rot)
-            {
-                case 0:  /*rotate(0)*/   scale (-1, 1); image(img, x_flip, y,      grid_s, grid_s); break;
-                case 1:  rotate(PI/2);   scale (-1, 1); image(img, y_flip, x_flip, grid_s, grid_s); break;
-                case 2:  rotate(PI);     scale (-1, 1); image(img, x,      y_flip, grid_s, grid_s); break;
-                case 3:  rotate(3*PI/2); scale (-1, 1); image(img, y,      x,      grid_s, grid_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
-            
-            // print mirrored
-            switch(rot)
-            {
-                case 0: /*rotate(0)*/   image(img, w+x_flip, y,        grid_s, grid_s); break;
-                case 1: rotate(3*PI/2); image(img, y_flip,   w+x_flip, grid_s, grid_s); break;
-                case 2: rotate(PI);     image(img, -w+x,     y_flip,   grid_s, grid_s); break;
-                case 3: rotate(PI/2);   image(img, y,        -w+x,     grid_s, grid_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
+            case 0:  /*rotate(0)*/   scale (-1, 1); image(img, -(w-x),   y,        blot_s, blot_s); break;
+            case 1:  rotate(3*PI/2); scale (-1, 1); image(img, y,        w+x_flip, blot_s, blot_s); break;
+            case 2:  rotate(PI);     scale (-1, 1); image(img, w+x_flip, y_flip,   blot_s, blot_s); break;
+            case 3:  rotate(PI/2);   scale (-1, 1); image(img, y_flip,   -(w-x),   blot_s, blot_s); break;
         }
+        resetMatrix();
+        scale(1, 1);
     }
-    // 2x2 blots
-    else if (blot_size == 2)
+    else
     {
-        var blot_s = grid_s*2;
-        x = x_index*grid_s;
-        y = y_index*grid_s;
-        x_flip = -x-blot_s;
-        y_flip = -y-blot_s;
-        if (mir == false)
+        // print base
+        switch(rot)
         {
-            // print base
-            switch(rot)
-            {
-                case 0: /*rotate(0)*/   image(img, x,      y,      blot_s, blot_s); break;
-                case 1: rotate(PI/2);   image(img, y,      x_flip, blot_s, blot_s); break;
-                case 2: rotate(PI);     image(img, x_flip, y_flip, blot_s, blot_s); break;
-                case 3: rotate(3*PI/2); image(img, y_flip, x,      blot_s, blot_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
-            
-            // print mirror
-            switch(rot)
-            {
-                case 0:  /*rotate(0)*/   scale (-1, 1); image(img, -(w-x),   y,        blot_s, blot_s); break;
-                case 1:  rotate(3*PI/2); scale (-1, 1); image(img, y,        w+x_flip, blot_s, blot_s); break;
-                case 2:  rotate(PI);     scale (-1, 1); image(img, w+x_flip, y_flip,   blot_s, blot_s); break;
-                case 3:  rotate(PI/2);   scale (-1, 1); image(img, y_flip,   -(w-x),   blot_s, blot_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
+            case 0:  /*rotate(0)*/   scale (-1, 1); image(img, x_flip, y,      blot_s, blot_s); break;
+            case 1:  rotate(PI/2);   scale (-1, 1); image(img, y_flip, x_flip, blot_s, blot_s); break;
+            case 2:  rotate(PI);     scale (-1, 1); image(img, x,      y_flip, blot_s, blot_s); break;
+            case 3:  rotate(3*PI/2); scale (-1, 1); image(img, y,      x,      blot_s, blot_s); break;
         }
-        else
+        resetMatrix();
+        scale(1, 1);
+
+         // print mirrored
+        switch(rot)
         {
-            // print base
-            switch(rot)
-            {
-                case 0:  /*rotate(0)*/   scale (-1, 1); image(img, x_flip, y,      blot_s, blot_s); break;
-                case 1:  rotate(PI/2);   scale (-1, 1); image(img, y_flip, x_flip, blot_s, blot_s); break;
-                case 2:  rotate(PI);     scale (-1, 1); image(img, x,      y_flip, blot_s, blot_s); break;
-                case 3:  rotate(3*PI/2); scale (-1, 1); image(img, y,      x,      blot_s, blot_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
-            
-             // print mirrored
-            switch(rot)
-            {
-                case 0: /*rotate(0)*/   image(img, w+x_flip, y,        blot_s, blot_s); break;
-                case 1: rotate(3*PI/2); image(img, y_flip,   w+x_flip, blot_s, blot_s); break;
-                case 2: rotate(PI);     image(img, -w+x,     y_flip,   blot_s, blot_s); break;
-                case 3: rotate(PI/2);   image(img, y,        -w+x,     blot_s, blot_s); break;
-            }
-            resetMatrix();
-            scale(1, 1);
+            case 0: /*rotate(0)*/   image(img, w+x_flip, y,        blot_s, blot_s); break;
+            case 1: rotate(3*PI/2); image(img, y_flip,   w+x_flip, blot_s, blot_s); break;
+            case 2: rotate(PI);     image(img, -w+x,     y_flip,   blot_s, blot_s); break;
+            case 3: rotate(PI/2);   image(img, y,        -w+x,     blot_s, blot_s); break;
         }
+        resetMatrix();
+        scale(1, 1);
     }
 }
 
@@ -237,6 +174,113 @@ function getRandomIntInclusive(min, max) {
 // function for deciding what blots are plotted where
 function generate()
 {
+    ///////////
+    // 4 X 4 //
+    ///////////
+    var num_5x5 = getRandomIntInclusive(0, 1);
+    if (num_5x5 == 0)
+    {
+        big_x = getRandomIntInclusive(0, 1);
+        big_y = getRandomIntInclusive(0, 6);
+        
+        // pick random blot from entire set BLOTS[]
+        var r_rot  = getRandomIntInclusive(0, 3);
+        var r_type = getRandomIntInclusive(0, 6);
+        var r_ver  = getRandomIntInclusive(0, 7);
+
+        // add selection to PLACE[]
+        PLACE[PLACE.length] = new placement(r_rot, r_type, r_ver, big_x, big_y, 4);
+        
+        for (var j = 0; j < 16; j++)
+        {
+            // mark as covered
+            COVER[big_x+(j%4)][big_y+((j-(j%4))/4)].coverage = true;
+
+            // mark edges of all squares  under 4x4 in the same way
+            COVER[big_x+(j%4)][big_y+((j-(j%4))/4)].top      = COVER[big_x][big_y].top;
+            COVER[big_x+(j%4)][big_y+((j-(j%4))/4)].bottom   = COVER[big_x][big_y].bottom;
+            COVER[big_x+(j%4)][big_y+((j-(j%4))/4)].left     = COVER[big_x][big_y].left;
+            COVER[big_x+(j%4)][big_y+((j-(j%4))/4)].right    = COVER[big_x][big_y].right;
+        }
+        
+        // update 16 adjacent sides accordingly
+        if (big_y>0)
+        {
+            COVER[big_x  ][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+1][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+2][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+3][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+        }
+        if (big_y<6)
+        {
+            COVER[big_x  ][big_y+4].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+1][big_y+4].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+2][big_y+4].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+3][big_y+4].top = BLOTS[r_rot][r_type][r_ver].bottom;
+        }
+        if (big_x>0)
+        {
+            COVER[big_x-1][big_y  ].right = BLOTS[r_rot][r_type][r_ver].left;
+            COVER[big_x-1][big_y+1].right = BLOTS[r_rot][r_type][r_ver].left;
+            COVER[big_x-1][big_y+2].right = BLOTS[r_rot][r_type][r_ver].left;
+            COVER[big_x-1][big_y+3].right = BLOTS[r_rot][r_type][r_ver].left;
+        }
+        if (big_x<1)
+        {
+            COVER[big_x+4][big_y  ].left = BLOTS[r_rot][r_type][r_ver].right;
+            COVER[big_x+4][big_y+1].left = BLOTS[r_rot][r_type][r_ver].right;
+            COVER[big_x+4][big_y+2].left = BLOTS[r_rot][r_type][r_ver].right;
+            COVER[big_x+4][big_y+3].left = BLOTS[r_rot][r_type][r_ver].right;
+        }
+    }
+    
+    ///////////
+    // 5 X 5 //
+    ///////////
+    else
+    {
+        big_x = 0;
+        big_y = getRandomIntInclusive(0, 5);
+        
+        // pick random blot from entire set BLOTS[]
+        var r_rot  = getRandomIntInclusive(0, 3);
+        var r_type = getRandomIntInclusive(0, 6);
+        var r_ver  = getRandomIntInclusive(0, 7);
+
+        // add selection to PLACE[]
+        PLACE[PLACE.length] = new placement(r_rot, r_type, r_ver, big_x, big_y, 5);
+        
+        for (var j = 0; j < 25; j++)
+        {
+            // mark as covered
+            COVER[big_x+(j%5)][big_y+((j-(j%5))/5)].coverage = true;
+
+            // mark edges of all squares  under 5x5 in the same way
+            COVER[big_x+(j%5)][big_y+((j-(j%5))/5)].top      = COVER[big_x][big_y].top;
+            COVER[big_x+(j%5)][big_y+((j-(j%5))/5)].bottom   = COVER[big_x][big_y].bottom;
+            COVER[big_x+(j%5)][big_y+((j-(j%5))/5)].left     = COVER[big_x][big_y].left;
+            COVER[big_x+(j%5)][big_y+((j-(j%5))/5)].right    = COVER[big_x][big_y].right;
+        }
+        
+        // update 10 adjacent sides accordingly (left and right don't matter here)
+        if (big_y>0)
+        {
+            COVER[big_x  ][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+1][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+2][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+3][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            COVER[big_x+4][big_y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+        }
+        if (big_y<5)
+        {
+            COVER[big_x  ][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+1][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+2][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+3][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            COVER[big_x+4][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
+        }
+    }
+    
     ///////////
     // 2 X 2 //
     ///////////
