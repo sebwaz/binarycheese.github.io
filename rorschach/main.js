@@ -171,6 +171,24 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// mouse click listener, regenerates the rorschach
+function mouseClicked() {
+    /////////////////
+    // reset COVER //
+    /////////////////
+    COVER = []
+    COVER = new Array(5)
+    for (var i = 0; i < 5; i++)
+    {
+        COVER[i] = new Array(10);
+        for (var j = 0; j < 10; j++)
+        {
+            COVER[i][j] = new coverage(false, i, j, 'n', 'n', 'n', 'n');
+        }
+    }
+    setup();
+}
+
 // function for deciding what blots are plotted where
 function generate()
 {
@@ -278,6 +296,89 @@ function generate()
             COVER[big_x+2][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
             COVER[big_x+3][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
             COVER[big_x+4][big_y+5].top = BLOTS[r_rot][r_type][r_ver].bottom;
+        }
+    }
+    
+    ///////////
+    // 3 X 3 //
+    ///////////
+    for (var i = 0; i < 2; i++)
+    {
+        // make list of possible anchor points
+        var list_open = [];
+        for (var j = 0; j < 5-2; j++)
+        {
+            for (var k = 0; k < 10-2; k++)
+            {
+                if (!COVER[j][k].coverage   && !COVER[j+1][k].coverage   && !COVER[j+2][k].coverage   &&
+                    !COVER[j][k+1].coverage && !COVER[j+1][k+1].coverage && !COVER[j+2][k+1].coverage &&
+                    !COVER[j][k+2].coverage && !COVER[j+1][k+2].coverage && !COVER[j+2][k+2].coverage &&
+                    (j==0 || !COVER[j-1][k].coverage && !COVER[j-1][k+1].coverage && !COVER[j-1][k+2].coverage) &&
+                    (j==2 || !COVER[j+3][k].coverage && !COVER[j+3][k+1].coverage && !COVER[j+3][k+2].coverage) &&
+                    (k==0 || !COVER[j][k-1].coverage && !COVER[j+1][k-1].coverage && !COVER[j+2][k-1].coverage) &&
+                    (k==7 || !COVER[j][k+3].coverage && !COVER[j+1][k+3].coverage && !COVER[j+2][k+3].coverage))
+                {
+                    list_open[list_open.length] = COVER[j][k];
+                }
+            }
+        }
+        
+        // if list is empty, break out of loop
+        if (list_open.length == 0)
+        {
+            break;
+        }
+        // else add the 3x3s to the place buffer, update coverage accordingly
+        else
+        {
+            // pick random point from list
+            var chosen = getRandomIntInclusive(0, list_open.length-1);
+            
+            // pick random blot from entire set BLOTS[]
+            var r_rot  = getRandomIntInclusive(0, 3);
+            var r_type = getRandomIntInclusive(0, 6);
+            var r_ver  = getRandomIntInclusive(0, 7);
+            
+            // add selection to PLACE[]
+            PLACE[PLACE.length] = new placement(r_rot, r_type, r_ver, list_open[chosen].x, list_open[chosen].y, 3);
+            // update COVER[] accordingly (double check all adjacent edges)
+            for (var j = 0; j < 9; j++)
+            {
+                // mark as covered
+                COVER[list_open[chosen].x+(j%3)][list_open[chosen].y+((j-(j%3))/3)].coverage = true;
+                 
+                // mark edges of all squares  under 3x3 in the same way
+                COVER[list_open[chosen].x+(j%3)][list_open[chosen].y+((j-(j%3))/3)].top      = COVER[list_open[chosen].x][list_open[chosen].y].top;
+                COVER[list_open[chosen].x+(j%3)][list_open[chosen].y+((j-(j%3))/3)].bottom   = COVER[list_open[chosen].x][list_open[chosen].y].bottom;
+                COVER[list_open[chosen].x+(j%3)][list_open[chosen].y+((j-(j%3))/3)].left     = COVER[list_open[chosen].x][list_open[chosen].y].left;
+                COVER[list_open[chosen].x+(j%3)][list_open[chosen].y+((j-(j%3))/3)].right    = COVER[list_open[chosen].x][list_open[chosen].y].right;
+            }
+            
+            // update 12 adjacent sides accordingly
+            if (list_open[chosen].y>0)
+            {
+                COVER[list_open[chosen].x  ][list_open[chosen].y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+                COVER[list_open[chosen].x+1][list_open[chosen].y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+                COVER[list_open[chosen].x+2][list_open[chosen].y-1].bottom = BLOTS[r_rot][r_type][r_ver].top;
+            }
+            if (list_open[chosen].y<7)
+            {
+                COVER[list_open[chosen].x  ][list_open[chosen].y+3].top = BLOTS[r_rot][r_type][r_ver].bottom;
+                COVER[list_open[chosen].x+1][list_open[chosen].y+3].top = BLOTS[r_rot][r_type][r_ver].bottom;
+                COVER[list_open[chosen].x+2][list_open[chosen].y+3].top = BLOTS[r_rot][r_type][r_ver].bottom;
+            }
+            if (list_open[chosen].x>0)
+            {
+                COVER[list_open[chosen].x-1][list_open[chosen].y  ].right = BLOTS[r_rot][r_type][r_ver].left;
+                COVER[list_open[chosen].x-1][list_open[chosen].y+1].right = BLOTS[r_rot][r_type][r_ver].left;
+                COVER[list_open[chosen].x-1][list_open[chosen].y+2].right = BLOTS[r_rot][r_type][r_ver].left;
+            }
+            if (list_open[chosen].x<2)
+            {
+                COVER[list_open[chosen].x+3][list_open[chosen].y  ].left = BLOTS[r_rot][r_type][r_ver].right;
+                COVER[list_open[chosen].x+3][list_open[chosen].y+1].left = BLOTS[r_rot][r_type][r_ver].right;
+                COVER[list_open[chosen].x+3][list_open[chosen].y+2].left = BLOTS[r_rot][r_type][r_ver].right;
+            }
         }
     }
     
@@ -458,7 +559,7 @@ function generate()
 function setup()
 {
     createCanvas(w, h);
-    background(255);
+    background(255, 0, 0);
     noStroke();
     
     //////////////////
