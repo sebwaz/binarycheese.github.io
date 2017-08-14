@@ -195,11 +195,11 @@ function generate()
     ///////////
     // 4 X 4 //
     ///////////
-    var num_5x5 = getRandomIntInclusive(0, 1);
+    var num_5x5 = getRandomIntInclusive(0, 0);
     if (num_5x5 == 0)
     {
-        big_x = getRandomIntInclusive(0, 1);
-        big_y = getRandomIntInclusive(0, 6);
+        big_x = 1;
+        big_y = getRandomIntInclusive(1, 5);
         
         // pick random blot from entire set BLOTS[]
         var r_rot  = getRandomIntInclusive(0, 3);
@@ -252,9 +252,9 @@ function generate()
         }
     }
     
-    ///////////
-    // 5 X 5 //
-    ///////////
+    ///////////////////////
+    // 5 X 5 // NOT USED //
+    ///////////////////////
     else
     {
         big_x = 0;
@@ -302,13 +302,13 @@ function generate()
     ///////////
     // 3 X 3 //
     ///////////
-    for (var i = 0; i < 2; i++)
+    for (var i = 0; i < 1; i++)
     {
         // make list of possible anchor points
         var list_open = [];
-        for (var j = 0; j < 5-2; j++)
+        for (var j = 1; j < 5-2; j++)
         {
-            for (var k = 0; k < 10-2; k++)
+            for (var k = 1; k < 10-3; k++)
             {
                 if (!COVER[j][k].coverage   && !COVER[j+1][k].coverage   && !COVER[j+2][k].coverage   &&
                     !COVER[j][k+1].coverage && !COVER[j+1][k+1].coverage && !COVER[j+2][k+1].coverage &&
@@ -387,14 +387,13 @@ function generate()
     ///////////
     // pick random number of 2x2 blots: [0, 10]
     var num_2x2 = getRandomIntInclusive(0, 10);
-    
     for (var i = 0; i < num_2x2; i++)
     {
         // make list of possible anchor points
         var list_open = [];
-        for (var j = 0; j < 5-1; j++)
+        for (var j = 1; j < 5-1; j++)
         {
-            for (var k = 0; k < 10-1; k++)
+            for (var k = 1; k < 10-2; k++)
             {
                 if (!COVER[j][k].coverage && !COVER[j+1][k].coverage && !COVER[j][k+1].coverage && !COVER[j+1][k+1].coverage &&
                     (j==0 || !COVER[j-1][k].coverage && !COVER[j-1][k+1].coverage) &&
@@ -465,6 +464,22 @@ function generate()
     //////////////////////////////////////////////
     // FORCE WHITE BORDER IF NOT DETERMINED YET //
     //////////////////////////////////////////////
+    for (var i = 0; i < 5; i++)
+    {
+        if (COVER[i][0].top    == 'n') { COVER[i][0].top    = 'w'; }
+        if (COVER[i][9].bottom == 'n') { COVER[i][9].bottom = 'w'; }
+    }
+    for (var i = 0; i < 10; i++)
+    {
+        if (COVER[0][i].left == 'n')   { COVER[0][i].left = 'w'; }
+    }
+    if (COVER[1][0].left   == 'n') { COVER[1][0].left   = 'w'; }
+    if (COVER[1][9].left   == 'n') { COVER[1][9].left   = 'w'; }
+    if (COVER[0][1].top    == 'n') { COVER[0][1].top    = 'w'; }
+    if (COVER[0][8].bottom == 'n') { COVER[0][8].bottom = 'w'; }
+    COVER[0][0].coverage = true;
+    COVER[0][9].coverage = true;
+    
     
     ///////////
     // 1 X 1 //
