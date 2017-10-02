@@ -453,8 +453,8 @@ function print_performance()
         //print sensitivity
         text("d' = ".concat(dP_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y);
         //print criterion
-        text("C = ".concat(Csd_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y*3/2);
-        text("LR = ".concat(LR_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y*2);
+        //text("C = ".concat(Csd_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y*3/2);
+        //text("LR = ".concat(LR_lo.toFixed(2).toString()), w/2+l_x, h/2+t_y*2);
     }
     
     if (same_hi_counter != 0 && diff_hi_counter != 0)
@@ -475,8 +475,8 @@ function print_performance()
         //print sensitivity
         text("d' = ".concat(dP_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y);
         //print criterion
-        text("C = ".concat(Csd_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y*3/2);
-        text("LR = ".concat(LR_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y*2);
+        //text("C = ".concat(Csd_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y*3/2);
+        //text("LR = ".concat(LR_hi.toFixed(2).toString()), w/2+r_x, h/2+t_y*2);
     }
 }
 
